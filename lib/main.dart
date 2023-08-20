@@ -1,20 +1,28 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:reviser/core/utils/logger.dart';
+import 'package:reviser/features/initialization/initialization.dart';
+import 'package:reviser/features/initialization/widgets/app_error.dart';
+import 'package:reviser/features/initialization/widgets/dependencies_scope.dart';
 
-void main() {
-  runApp(const ReviserApp());
-}
+import 'features/app/widgets/reviser_app.dart';
 
-class ReviserApp extends StatelessWidget {
-  const ReviserApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+void main() => runZonedGuarded(
+      () {
+        initializeApp(
+          onSuccess: (dependencies) => runApp(
+            DependenciesScope(
+              dependencies: dependencies,
+              child: const ReviserApp(),
+            ),
+          ),
+          onError: (e, s) {
+            runApp(AppError(error: e));
+          },
+        );
+      },
+      (e, s) {
+        logger.e("Caught error in runZonedGuarded", error: e, stackTrace: s);
+      },
     );
-  }
-}
