@@ -11,11 +11,13 @@ final class DependenciesScope extends InheritedWidget {
 
   final Dependencies dependencies;
 
-  static Dependencies of(BuildContext context, {bool listen = false}) =>
-      ScopeMixin.scopeOf<DependenciesScope>(context).dependencies;
+  static Dependencies of(BuildContext context, {bool listen = true}) =>
+      ScopeMixin.scopeOf<DependenciesScope>(context, listen: listen)
+          .dependencies;
 
-  static Dependencies? maybeOf(BuildContext context, {bool listen = false}) =>
-      ScopeMixin.scopeMaybeOf<DependenciesScope>(context)?.dependencies;
+  static Dependencies? maybeOf(BuildContext context, {bool listen = true}) =>
+      ScopeMixin.scopeMaybeOf<DependenciesScope>(context, listen: listen)
+          ?.dependencies;
 
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;

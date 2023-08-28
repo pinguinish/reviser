@@ -16,5 +16,9 @@ class AppBlocObserver extends BlocObserver {
     super.onError(bloc, error, stackTrace);
   }
 
-
+  @override
+  void onEvent(Bloc bloc, Object? event) {
+    logger.d("[${bloc.runtimeType}]: $event");
+    super.onEvent(bloc, event);
+  }
 }

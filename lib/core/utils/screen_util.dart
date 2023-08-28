@@ -10,7 +10,7 @@ abstract class ScreenDimension {
 
 abstract class DeviceTextScaleFactor {
   static const double small = 1;
-  static const double medium = 1.2;
+  static const double medium = 1.3;
   static const double large = 1;
 }
 
@@ -25,7 +25,6 @@ extension ScreenUtilExtension on BuildContext {
     WidgetBuilder? large,
     WidgetBuilder? medium,
     WidgetBuilder? small,
-    WidgetBuilder? unknown,
   }) =>
       switch (ScreenUtil.deviceTypeOf(View.of(this).display.size)) {
         LargeDeviceType _ => callDeviceBuilderCheckingNull(large, this),
@@ -66,7 +65,6 @@ class ScreenUtil {
           final data = MediaQuery.of(context).copyWith(
             textScaleFactor: device.textScaleFactor,
           );
-          DeviceGestureSettings.fromView(View.of(context));
           return MediaQuery(
             data: data,
             child: child!,

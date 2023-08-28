@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
+import 'package:reviser/core/bloc/observer.dart';
 import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/features/initialization/models/dependencies.dart';
 
@@ -15,8 +17,9 @@ Future<void> initializeApp({
     //   WidgetsFlutterBinding.ensureInitialized();
     //   setWindowMinSize(const Size(800, 500));
     // }
+    Bloc.observer = AppBlocObserver();
     _catchDartFlutterErrors();
-    onSuccess(const ImmutableDependencies());
+    onSuccess(ImmutableDependencies());
   } on Object catch (e, s) {
     onError(e, s);
     logger.e("Failed to initialize app", error: e, stackTrace: s);

@@ -2,6 +2,9 @@ import "package:flutter/material.dart";
 import "package:reviser/core/theme/color_theme_extension.dart";
 import "package:reviser/core/theme/reviser_app_theme.dart";
 import "package:reviser/core/utils/screen_util.dart";
+import 'package:reviser/features/search/widgets/search_scope.dart';
+
+import '../../search/widgets/search.dart';
 
 class ReviserApp extends StatelessWidget {
   const ReviserApp({super.key});
@@ -29,8 +32,18 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(
-        child: Text("Hello, World"),
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(child: SizedBox(height: 50)),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverToBoxAdapter(
+                child: SearchScope(child: Search()),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
