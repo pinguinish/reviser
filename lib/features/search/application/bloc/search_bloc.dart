@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:reviser/features/search/bloc/search_event.dart';
-import 'package:reviser/features/search/bloc/search_state.dart';
+import 'package:reviser/features/search/application/bloc/search_event.dart';
+import 'package:reviser/features/search/application/bloc/search_state.dart';
 import 'package:reviser/features/search/domain/repository/i_search_repository.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
@@ -9,7 +9,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   SearchBloc({required ISearchRepository repository})
       : _repository = repository,
-        super(SearchIdle()) {
+        super(const SearchIdle()) {
     on<SearchStarted>(
       (event, emit) => _search(event.word, emit),
       transformer: sequential(),

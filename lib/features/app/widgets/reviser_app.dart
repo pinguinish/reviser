@@ -1,50 +1,35 @@
+import "package:auto_route/annotations.dart";
 import "package:flutter/material.dart";
 import "package:reviser/core/theme/color_theme_extension.dart";
 import "package:reviser/core/theme/reviser_app_theme.dart";
 import "package:reviser/core/utils/screen_util.dart";
-import 'package:reviser/features/search/widgets/search_scope.dart';
+import "package:reviser/features/initialization/models/dependencies.dart";
 
-import '../../search/widgets/search.dart';
 
 class ReviserApp extends StatelessWidget {
-  const ReviserApp({super.key});
+  const ReviserApp({
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context) => context.adaptByDeviceType(
-        small: (_) => ScreenUtil.responsiveMaterialApp(
-          child: const HomeScreen(),
-          theme: ReviserAppTheme.lightTheme.applyAllExtension(),
-        ),
-        medium: (_) => ScreenUtil.responsiveMaterialApp(
-          child: const HomeScreen(),
-          theme: ReviserAppTheme.lightTheme.applyAllExtension(),
-        ),
-        large: (_) => ScreenUtil.responsiveMaterialApp(
-          child: const HomeScreen(),
-          theme: ReviserAppTheme.lightTheme.applyAllExtension(),
-        ),
+  Widget build(BuildContext context) => MaterialApp.router(
+        builder: (context, child) {
+          final device = ScreenUtil.deviceTypeOf(View.of(context).display.size);
+          final data = MediaQuery.of(context).copyWith(
+            textScaleFactor: device.textScaleFactor,
+          );
+          return MediaQuery(
+            data: data,
+            child: child!,
+          );
+        },
+        theme: ReviserAppTheme.lightTheme.copyWith(
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ).applyAllExtension(),
+        darkTheme: ReviserAppTheme.darkTheme.copyWith(
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ).applyAllExtension(),
+        routerConfig: Dependencies.of(context).router.config(),
       );
-}
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(child: SizedBox(height: 50)),
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverToBoxAdapter(
-                child: SearchScope(child: Search()),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

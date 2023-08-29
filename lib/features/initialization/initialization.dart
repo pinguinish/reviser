@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:reviser/core/bloc/observer.dart';
 import 'package:reviser/core/utils/logger.dart';
@@ -12,6 +13,7 @@ Future<void> initializeApp({
   required void Function(Object error, StackTrace stackTrace) onError,
 }) async {
   try {
+    WidgetsFlutterBinding.ensureInitialized();
     if (kReleaseMode) Logger.level = Level.info;
     // if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
     //   WidgetsFlutterBinding.ensureInitialized();

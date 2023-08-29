@@ -21,4 +21,12 @@ class AppBlocObserver extends BlocObserver {
     logger.d("[${bloc.runtimeType}]: $event");
     super.onEvent(bloc, event);
   }
+
+
+  @override
+  void onTransition(Bloc bloc, Transition transition) {
+    logger.i("[${bloc.runtimeType}]: ${transition.currentState.runtimeType} -> ${transition.nextState.runtimeType}");
+    super.onTransition(bloc, transition);
+
+  }
 }

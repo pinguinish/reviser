@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:reviser/core/router/router.dart';
 import 'package:reviser/core/utils/logger.dart';
 
 abstract class ScreenDimension {
@@ -10,7 +11,7 @@ abstract class ScreenDimension {
 
 abstract class DeviceTextScaleFactor {
   static const double small = 1;
-  static const double medium = 1.3;
+  static const double medium = 1.4;
   static const double large = 1;
 }
 
@@ -53,31 +54,6 @@ class ScreenUtil {
           throw DeviceTypeException("Undefined device type with Size($size)"),
       };
 
-  static MaterialApp responsiveMaterialApp({
-    required Widget child,
-    ThemeData? theme,
-    ThemeData? darkTheme,
-  }) =>
-      MaterialApp(
-        builder: (context, child) {
-          final device = deviceTypeOf(View.of(context).display.size);
-          logger.d(device);
-          final data = MediaQuery.of(context).copyWith(
-            textScaleFactor: device.textScaleFactor,
-          );
-          return MediaQuery(
-            data: data,
-            child: child!,
-          );
-        },
-        theme: theme?.copyWith(
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        darkTheme: darkTheme?.copyWith(
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: child,
-      );
 }
 
 @immutable

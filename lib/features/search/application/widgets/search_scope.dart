@@ -1,10 +1,17 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reviser/core/router/router.dart';
+import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/core/utils/mixins/scope_mixin.dart';
 import 'package:reviser/features/initialization/models/dependencies.dart';
-import 'package:reviser/features/search/bloc/search_bloc.dart';
-import 'package:reviser/features/search/bloc/search_event.dart';
-import 'package:reviser/features/search/widgets/search.dart';
+import 'package:reviser/features/search/application/bloc/search_bloc.dart';
+import 'package:reviser/features/search/application/bloc/search_event.dart';
+import 'package:reviser/features/search/application/bloc/search_state.dart';
+import 'package:reviser/features/search/domain/entities/word_entity.dart';
+import 'package:reviser/features/search/application/widgets/search.dart';
+
+typedef SearchCallback = Function(String);
 
 /// SearchScope is used to perform tasks related to searching in dictionary
 ///
@@ -21,23 +28,21 @@ class SearchScope extends StatefulWidget {
 
   static SearchBloc blocOf(BuildContext context, {final listen = true}) =>
       ScopeMixin.scopeOf<_InheritedSearch>(context, listen: listen).state.bloc;
-  static String searchOf(BuildContext context, {final listen = true}) =>
-      ScopeMixin.scopeOf<_InheritedSearch>(context, listen: listen).search;
-  static void search(BuildContext context, String match) {
+
+  static List<WordEntity> wordsOf(
+    BuildContext context, {
+    final listen = true,
+  }) =>
+      ScopeMixin.scopeOf<_InheritedSearch>(context, listen: listen).words;
+
+  static void search({
+    required BuildContext context,
+    required String match,
+    SearchCallback? onSearch,
+  }) {
     final scope = _of(context);
     scope.bloc.add(SearchStarted(word: match));
-    // if (Navigator.canPop(context)) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => _InheritedSearch(
-            search: match,
-            state: scope,
-            child: const DefinitionPage(),
-          ),
-        ),
-      );
-    // }
+    if (onSearch != null) onSearch(match);
   }
 
   @override
@@ -65,24 +70,29 @@ class _SearchScopeState extends State<SearchScope> {
   @override
   Widget build(BuildContext context) => BlocProvider<SearchBloc>.value(
         value: bloc,
-        child: _InheritedSearch(
-          search: "",
-          state: this,
-          child: widget.child,
-        ),
+        child: BlocBuilder<SearchBloc, SearchState>(builder: (_, state) {
+          logger.d(state.words);
+          return _InheritedSearch(
+            words: state.words,
+            state: this,
+            child: widget.child,
+          );
+        }),
       );
 }
 
 class _InheritedSearch extends InheritedWidget {
   final _SearchScopeState state;
-  final String search;
+
+  final List<WordEntity> words;
 
   const _InheritedSearch({
     required super.child,
-    required this.search,
+    required this.words,
     required this.state,
   });
 
   @override
-  bool updateShouldNotify(_InheritedSearch old) => state != old.state;
+  bool updateShouldNotify(_InheritedSearch old) =>
+      words.length != old.words.length;
 }

@@ -18,7 +18,6 @@ final class SearchRepository implements ISearchRepository {
   Future<List<WordEntity>> search(String word, {int count = 5}) async {
     try {
       final wordData = await _searchRemoteDataSource.search(word);
-      logger.d(wordData);
       return wordData.map((e) => e.toEntity()).toList();
     } on NotFoundWordException catch(e) {
       logger.i(e);
