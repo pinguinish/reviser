@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reviser/features/search/application/widgets/search_scope.dart';
-import '../../../../../core/constant/palette.dart';
+import 'package:reviser/features/search/widgets/search_scope.dart';
+import '../../../../core/constant/palette.dart';
 import 'repository_screen.dart';
 
 class DefinitionList extends StatelessWidget {

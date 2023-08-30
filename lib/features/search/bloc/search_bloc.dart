@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:reviser/features/search/application/bloc/search_event.dart';
-import 'package:reviser/features/search/application/bloc/search_state.dart';
+import 'package:reviser/features/search/bloc/search_event.dart';
+import 'package:reviser/features/search/bloc/search_state.dart';
 import 'package:reviser/features/search/domain/repository/i_search_repository.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
@@ -22,7 +22,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
       final data = await _repository.search(match);
       if (data.isEmpty) return emit(const SearchError(isNotFound: true));
-
       emit(SearchSuccess(words: data));
     } on Object {
       emit(const SearchError());

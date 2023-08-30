@@ -1,7 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:reviser/core/utils/screen_util.dart';
-import 'package:reviser/features/search/application/widgets/search.dart';
+import 'package:reviser/features/search/widgets/search.dart';
 
 @RoutePage(name: "InitialRoute")
 class HomeScreen extends StatelessWidget {

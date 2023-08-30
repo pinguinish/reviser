@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reviser/core/constant/palette.dart';
 import 'package:reviser/core/router/router.dart';
 import 'package:reviser/features/initialization/models/dependencies.dart';
-import 'package:reviser/features/search/application/widgets/search_scope.dart';
+import 'package:reviser/features/search/widgets/search_scope.dart';
 
 class Search extends StatefulWidget {
   const Search({

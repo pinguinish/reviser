@@ -5,11 +5,11 @@ import 'package:reviser/core/router/router.dart';
 import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/core/utils/mixins/scope_mixin.dart';
 import 'package:reviser/features/initialization/models/dependencies.dart';
-import 'package:reviser/features/search/application/bloc/search_bloc.dart';
-import 'package:reviser/features/search/application/bloc/search_event.dart';
-import 'package:reviser/features/search/application/bloc/search_state.dart';
+import 'package:reviser/features/search/bloc/search_bloc.dart';
+import 'package:reviser/features/search/bloc/search_event.dart';
+import 'package:reviser/features/search/bloc/search_state.dart';
 import 'package:reviser/features/search/domain/entities/word_entity.dart';
-import 'package:reviser/features/search/application/widgets/search.dart';
+import 'package:reviser/features/search/widgets/search.dart';
 
 typedef SearchCallback = Function(String);
 

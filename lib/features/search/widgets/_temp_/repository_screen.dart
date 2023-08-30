@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reviser/core/constant/palette.dart';
 import 'package:reviser/core/utils/logger.dart';
-import 'package:reviser/features/search/application/bloc/search_bloc.dart';
+import 'package:reviser/features/search/bloc/search_bloc.dart';
 
 import '../../bloc/search_state.dart';
-import '../../../domain/entities/word_entity.dart';
+import '../../domain/entities/word_entity.dart';
 import '../search.dart';
 import '../search_scope.dart';
 import 'definition_list.dart';
