@@ -5,6 +5,6 @@ mixin class ValidatorMixin {
 
 
   final List<TextInputFormatter> onlyText = [
-    FilteringTextInputFormatter.allow(RegExp("^[A-Za-z]+")),
+    FilteringTextInputFormatter.allow(RegExp("^[A-Za-z ]+")),
   ];
 }

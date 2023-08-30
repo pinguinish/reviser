@@ -34,10 +34,10 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    WordEditorRoute.name: (routeData) {
+    VocabularyItemEditorRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const WordEditorScreen(),
+        child: const VocabularyItemEditor(),
       );
     },
   };
@@ -97,15 +97,15 @@ class RepositoryRouteArgs {
 }
 
 /// generated route for
-/// [WordEditorScreen]
-class WordEditorRoute extends PageRouteInfo<void> {
-  const WordEditorRoute({List<PageRouteInfo>? children})
+/// [VocabularyItemEditor]
+class VocabularyItemEditorRoute extends PageRouteInfo<void> {
+  const VocabularyItemEditorRoute({List<PageRouteInfo>? children})
       : super(
-          WordEditorRoute.name,
+          VocabularyItemEditorRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'WordEditorRoute';
+  static const String name = 'VocabularyItemEditorRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
