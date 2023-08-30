@@ -18,8 +18,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Future<void> _search(String match, Emitter<SearchState> emit) async {
     try {
+      
       emit(const SearchProsessing());
-
       final data = await _repository.search(match);
       if (data.isEmpty) return emit(const SearchError(isNotFound: true));
       emit(SearchSuccess(words: data));

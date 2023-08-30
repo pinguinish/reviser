@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reviser/core/constant/palette.dart';
 import 'package:reviser/core/router/router.dart';
+import 'package:reviser/core/utils/mixins/validator_mixin.dart';
 import 'package:reviser/features/initialization/models/dependencies.dart';
 import 'package:reviser/features/search/widgets/search_scope.dart';
 
@@ -16,7 +17,7 @@ class Search extends StatefulWidget {
   State<Search> createState() => _SearchState();
 }
 
-class _SearchState extends State<Search> {
+class _SearchState extends State<Search> with ValidatorMixin {
   late final _searchTextController = TextEditingController(
     text: widget.previous,
   );
@@ -41,7 +42,9 @@ class _SearchState extends State<Search> {
           Expanded(
             flex: 5,
             child: TextField(
+              inputFormatters: onlyText,
               controller: _searchTextController,
+              onSubmitted: _search,
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 hintText: "Search",
@@ -54,17 +57,12 @@ class _SearchState extends State<Search> {
             child: IconButton(
               color: Palette.white,
               style: IconButton.styleFrom(
-            
                 backgroundColor: Palette.indigo,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              onPressed: () => SearchScope.search(
-                context: context,
-                match: _searchTextController.text,
-                onSearch: search,
-              ),
+              onPressed: () => _search(_searchTextController.text),
               icon: const Icon(
                 Icons.search,
               ),
@@ -75,7 +73,16 @@ class _SearchState extends State<Search> {
     );
   }
 
-  void search(String match) {
+  void _search(String value) {
+    if (isEmpty(value)) return;
+    return SearchScope.search(
+      context: context,
+      match: value,
+      onSearch: _moveToResultPage,
+    );
+  }
+
+  void _moveToResultPage(String match) {
     if (!Navigator.canPop(context)) {
       Dependencies.of(context).router.push(
             RepositoryRoute(

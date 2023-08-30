@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:reviser/features/search/widgets/search_scope.dart';
 import '../../../../core/constant/palette.dart';
 import 'repository_screen.dart';
 
@@ -50,10 +49,12 @@ class DefinitionTile extends StatelessWidget {
             RichText(
               textScaleFactor: MediaQuery.of(context).textScaleFactor,
               text: TextSpan(
+                style: const TextStyle(color: Colors.black),
                 children: [
                   TextSpan(
-                      text: "[${data.partOfSpeech}] ",
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                    text: "[${data.partOfSpeech}] ",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   TextSpan(text: data.definition.definition),
                 ],
               ),
