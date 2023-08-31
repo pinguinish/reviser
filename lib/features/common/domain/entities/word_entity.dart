@@ -3,18 +3,21 @@
 
 import 'package:equatable/equatable.dart';
 
-class WordEntity {
+class WordEntity extends Equatable {
   final String word;
 
   final String phonetic;
 
   final List<MeaningEntity> meanings;
 
-  WordEntity({
+  const WordEntity({
     required this.word,
     required this.phonetic,
     required this.meanings,
   });
+
+  @override
+  List<Object> get props => [word, phonetic, meanings];
 }
 
 class MeaningEntity extends Equatable {

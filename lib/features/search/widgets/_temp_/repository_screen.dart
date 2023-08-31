@@ -6,12 +6,9 @@ import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/features/search/bloc/search_bloc.dart';
 
 import '../../bloc/search_state.dart';
-import '../../domain/entities/word_entity.dart';
 import '../search.dart';
 import '../search_scope.dart';
 import 'definition_list.dart';
-
-typedef Definition = ({DefinitionEntity definition, String partOfSpeech});
 
 @RoutePage()
 class RepositoryScreen extends StatelessWidget {
@@ -53,8 +50,7 @@ class RepositoryScreen extends StatelessWidget {
                       ),
                     ),
                   SearchSuccess _ => const _RepositorySuccess(),
-                  SearchError(isNotFound: final isNotFound) =>
-                    _RepositoryError(isNotFound: isNotFound),
+                  SearchError _ => _RepositoryError(errorState: state),
                 },
               ),
             ),
@@ -73,15 +69,16 @@ class _RepositorySuccess extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final definitions =
-        SearchScope.wordsOf(context).expand((word) => word.meanings).expand(
-              (meaning) => meaning.definitions.map(
-                (definition) => (
-                  partOfSpeech: meaning.partOfSpeech,
-                  definition: definition,
-                ),
-              ),
-            );
+    final definitions = SearchScope.wordsOf(context, listen: false)
+        .expand((word) => word.meanings)
+        .expand(
+          (meaning) => meaning.definitions.map(
+            (definition) => (
+              partOfSpeech: meaning.partOfSpeech,
+              definition: definition,
+            ),
+          ),
+        );
 
     return SliverMainAxisGroup(
       slivers: [
@@ -104,36 +101,53 @@ class _RepositorySuccess extends StatelessWidget {
 //
 
 class _RepositoryError extends StatelessWidget {
-  const _RepositoryError({required this.isNotFound});
+  const _RepositoryError({
+    required this.errorState,
+  });
 
-  final bool isNotFound;
+  final SearchError errorState;
 
   @override
-  Widget build(BuildContext context) => switch (isNotFound) {
-        true => SliverToBoxAdapter(
-              child: Column(
-            children: [
-              const Text("The word wasn't found"),
-              TextButton(
-                style: const ButtonStyle(
-                  splashFactory: NoSplash.splashFactory,
-                ),
-                onPressed: () {
-                  logger.d("User wants to add its own definition");
-                },
-                child: const Text(
-                  "Add own definition",
-                  style: TextStyle(
-                    color: Palette.indigo,
-                    fontSize: 12,
-                    decoration: TextDecoration.underline,
+  Widget build(BuildContext context) {
+    return _handleConnectionError() ??
+        switch (errorState.isNotFound) {
+          true => SliverToBoxAdapter(
+                child: Column(
+              children: [
+                const Text("The word wasn't found"),
+                TextButton(
+                  style: const ButtonStyle(
+                    splashFactory: NoSplash.splashFactory,
+                  ),
+                  onPressed: () {
+                    logger.d("User wants to add its own definition");
+                  },
+                  child: const Text(
+                    "Add own definition",
+                    style: TextStyle(
+                      color: Palette.indigo,
+                      fontSize: 12,
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          )),
-        false => const SliverToBoxAdapter(
-            child: Center(),
-          ),
-      };
+              ],
+            )),
+          false => const SliverToBoxAdapter(
+              child: Center(),
+            ),
+        };
+  }
+
+  SliverToBoxAdapter? _handleConnectionError() {
+    if (errorState is! SearchNetworkError) return null;
+    final network = (errorState as SearchNetworkError);
+    if (network.badConnection == true) {
+      return const SliverToBoxAdapter(child: Text("Bad connection"));
+    }
+    if (network.noInternetConnection == true) {
+      return const SliverToBoxAdapter(child: Text("No connection"));
+    }
+    return null;
+  }
 }

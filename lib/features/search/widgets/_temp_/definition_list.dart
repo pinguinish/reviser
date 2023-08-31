@@ -1,8 +1,17 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:reviser/core/router/router.dart';
+import 'package:reviser/core/utils/logger.dart';
+import 'package:reviser/features/search/widgets/search_scope.dart';
 import '../../../../core/constant/palette.dart';
-import 'repository_screen.dart';
+import '../../../common/domain/entities/word_entity.dart';
 
-class DefinitionList extends StatelessWidget {
+typedef Definition = ({
+  DefinitionEntity definition,
+  String partOfSpeech,
+});
+
+class DefinitionList extends StatefulWidget {
   const DefinitionList({
     super.key,
     required this.definitions,
@@ -11,16 +20,43 @@ class DefinitionList extends StatelessWidget {
   final List<Definition> definitions;
 
   @override
+  State<DefinitionList> createState() => _DefinitionListState();
+}
+
+class _DefinitionListState extends State<DefinitionList> {
+  @override
   Widget build(BuildContext context) {
+    final data = SearchScope.wordsOf(context);
+    logger.d("UPDATED");
     return SliverList.separated(
-      itemCount: definitions.length,
+      itemCount: widget.definitions.length,
       itemBuilder: (context, index) {
-        return DefinitionTile(
-          data: definitions[index],
+        return GestureDetector(
+          onLongPress: ()  async {
+            widget.definitions[index] = await navigateToVocabularyItemEditor(context, index);
+            setState(() {
+              
+            });
+          },
+          child: DefinitionTile(
+            data: widget.definitions[index],
+          ),
         );
       },
       separatorBuilder: (context, index) => const Divider(),
     );
+  }
+
+  Future<Definition> navigateToVocabularyItemEditor(
+    BuildContext context,
+    int index,
+  ) async {
+   final data = await context.router.push(
+      VocabularyItemEditorRoute(
+        definition: widget.definitions[index],
+      ),
+    );
+   return data! as Definition;
   }
 }
 

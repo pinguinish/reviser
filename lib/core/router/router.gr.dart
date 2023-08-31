@@ -35,9 +35,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     VocabularyItemEditorRoute.name: (routeData) {
+      final args = routeData.argsAs<VocabularyItemEditorRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const VocabularyItemEditor(),
+        child: VocabularyItemEditor(
+          key: args.key,
+          definition: args.definition,
+        ),
       );
     },
   };
@@ -98,14 +102,39 @@ class RepositoryRouteArgs {
 
 /// generated route for
 /// [VocabularyItemEditor]
-class VocabularyItemEditorRoute extends PageRouteInfo<void> {
-  const VocabularyItemEditorRoute({List<PageRouteInfo>? children})
-      : super(
+class VocabularyItemEditorRoute
+    extends PageRouteInfo<VocabularyItemEditorRouteArgs> {
+  VocabularyItemEditorRoute({
+    Key? key,
+    required Definition? definition,
+    List<PageRouteInfo>? children,
+  }) : super(
           VocabularyItemEditorRoute.name,
+          args: VocabularyItemEditorRouteArgs(
+            key: key,
+            definition: definition,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'VocabularyItemEditorRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<VocabularyItemEditorRouteArgs> page =
+      PageInfo<VocabularyItemEditorRouteArgs>(name);
+}
+
+class VocabularyItemEditorRouteArgs {
+  const VocabularyItemEditorRouteArgs({
+    this.key,
+    required this.definition,
+  });
+
+  final Key? key;
+
+  final Definition? definition;
+
+  @override
+  String toString() {
+    return 'VocabularyItemEditorRouteArgs{key: $key, definition: $definition}';
+  }
 }
