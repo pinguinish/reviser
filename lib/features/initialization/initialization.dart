@@ -16,7 +16,7 @@ Future<void> initializeApp({
     //   setWindowMinSize(const Size(800, 500));
     // }
     _catchDartFlutterErrors();
-    onSuccess(const ImmutableDependencies());
+    onSuccess(ImmutableDependencies());
   } on Object catch (e, s) {
     onError(e, s);
     logger.e("Failed to initialize app", error: e, stackTrace: s);
