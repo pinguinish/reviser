@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:reviser/features/common/domain/entities/word_entity.dart';
-import 'package:reviser/features/search/widgets/_temp_/definition_list.dart';
+import 'package:reviser/features/vocabulary/widgets/_temp_/definition_list.dart';
 
 @RoutePage(name: "VocabularyItemEditorRoute")
 class VocabularyItemEditor extends StatefulWidget {
