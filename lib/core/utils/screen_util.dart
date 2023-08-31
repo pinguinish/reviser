@@ -1,7 +1,4 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:reviser/core/router/router.dart';
-import 'package:reviser/core/utils/logger.dart';
 
 abstract class ScreenDimension {
   static const (double min, double max) small = (0, 640);

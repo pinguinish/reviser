@@ -1,4 +1,3 @@
-import "package:auto_route/annotations.dart";
 import "package:flutter/material.dart";
 import "package:reviser/core/theme/color_theme_extension.dart";
 import "package:reviser/core/theme/reviser_app_theme.dart";

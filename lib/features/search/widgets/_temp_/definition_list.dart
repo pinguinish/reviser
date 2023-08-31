@@ -26,8 +26,6 @@ class DefinitionList extends StatefulWidget {
 class _DefinitionListState extends State<DefinitionList> {
   @override
   Widget build(BuildContext context) {
-    final data = SearchScope.wordsOf(context);
-    logger.d("UPDATED");
     return SliverList.separated(
       itemCount: widget.definitions.length,
       itemBuilder: (context, index) {

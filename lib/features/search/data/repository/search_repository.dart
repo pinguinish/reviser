@@ -1,9 +1,5 @@
-import 'dart:io';
 
-import 'package:dio/dio.dart';
-import 'package:reviser/core/errors/network_conntection_exception.dart';
 import 'package:reviser/core/errors/not_found_exception.dart';
-import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/features/search/data/models/word/word_mapper_extension.dart';
 import 'package:reviser/features/search/data/source/remote/i_search_remote_data_source.dart';
 import 'package:reviser/features/common/domain/entities/word_entity.dart';

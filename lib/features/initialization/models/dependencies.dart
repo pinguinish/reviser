@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:reviser/core/router/router.dart';
@@ -33,5 +32,5 @@ final class ImmutableDependencies extends Dependencies {
   );
 
   @override
-  final AppRouter router = AppRouter();
+  late final AppRouter router = AppRouter();
 }
