@@ -4,8 +4,6 @@ import "package:reviser/core/theme/reviser_app_theme.dart";
 import "package:reviser/core/utils/screen_util.dart";
 import "package:reviser/features/initialization/models/dependencies.dart";
 
-final scaffoldMessangerKey = GlobalKey<ScaffoldMessengerState>();
-
 class ReviserApp extends StatelessWidget {
   const ReviserApp({
     super.key,
@@ -23,7 +21,6 @@ class ReviserApp extends StatelessWidget {
             child: child!,
           );
         },
-        scaffoldMessengerKey: scaffoldMessangerKey,
         theme: ReviserAppTheme.lightTheme
             .copyWith(
               visualDensity: VisualDensity.adaptivePlatformDensity,

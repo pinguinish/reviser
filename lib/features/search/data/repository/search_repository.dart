@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:reviser/core/errors/network_exception.dart';
 import 'package:reviser/core/errors/not_found_exception.dart';
 import 'package:reviser/features/search/data/models/word/word_mapper_extension.dart';
-import 'package:reviser/features/search/data/source/remote/i_search_remote_data_source.dart';
+import 'package:reviser/features/search/data/sources/remote/i_search_remote_data_source.dart';
 import 'package:reviser/features/common/domain/entities/word_entity.dart';
 import 'package:reviser/features/search/domain/repository/i_search_repository.dart';
 

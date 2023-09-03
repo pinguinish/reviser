@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reviser/core/constant/dimension.dart';
 import 'package:reviser/core/constant/palette.dart';
 import 'package:reviser/core/constant/strings.dart';
@@ -7,6 +8,9 @@ import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/core/widgets/default_text_button.dart';
 import 'package:reviser/core/widgets/gaps.dart';
 import 'package:reviser/features/common/domain/entities/word_entity.dart';
+import 'package:reviser/features/vocabulary/bloc/vocabulary_bloc.dart';
+import 'package:reviser/features/vocabulary/bloc/vocabulary_event.dart';
+import 'package:reviser/features/vocabulary/domain/entities/vocabulary_entities.dart';
 
 import '../../../search/bloc/search_state.dart';
 import '../../../search/widgets/search.dart';
@@ -108,6 +112,7 @@ class _RepositorySuccessState extends State<_RepositorySuccess> {
           definitions: definitions,
           onChanged: (selected) {
             // [TODO]: Handle onChanged
+            definitions = selected;
           },
         ),
         sliverDefaultVerticalGap,
@@ -115,7 +120,23 @@ class _RepositorySuccessState extends State<_RepositorySuccess> {
           child: SizedBox(
             width: double.infinity,
             child: DefaultTextButton(
-              onPressed: () {},
+              onPressed: () {
+                // final word = VocabularyWordEntity(
+                //   word: "Word",
+                //   definitions: definitions.map(
+                //     (d) {
+                //       return VocabularyDefinitionEntity(
+                //         definition: d.definition.definition,
+                //         partOfSpeech: d.partOfSpeech,
+                //         example: d.definition.example,
+                //       );
+                //     },
+                //   ).toList(),
+                // );
+                // context
+                //     .read<VocabularyBloc>()
+                //     .add(VocabularyWordAdded(word: word));
+              },
               text: Strings.save,
             ),
           ),

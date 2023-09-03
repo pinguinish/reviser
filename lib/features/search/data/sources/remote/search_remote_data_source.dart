@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:reviser/core/errors/not_found_exception.dart';
 import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/features/search/data/models/word/word_model.dart';
-import 'package:reviser/features/search/data/source/remote/i_search_remote_data_source.dart';
+import 'package:reviser/features/search/data/sources/remote/i_search_remote_data_source.dart';
 
 final class SearchRemoteDataSource implements ISearchRemoteDataSource {
   const SearchRemoteDataSource(this._client);
