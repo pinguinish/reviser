@@ -106,7 +106,10 @@ class VocabularyItemEditorRoute
     extends PageRouteInfo<VocabularyItemEditorRouteArgs> {
   VocabularyItemEditorRoute({
     Key? key,
-    required Definition? definition,
+    required ({
+      DefinitionEntity definition,
+      PartOfSpeech partOfSpeech
+    }) definition,
     List<PageRouteInfo>? children,
   }) : super(
           VocabularyItemEditorRoute.name,
@@ -131,7 +134,7 @@ class VocabularyItemEditorRouteArgs {
 
   final Key? key;
 
-  final Definition? definition;
+  final ({DefinitionEntity definition, PartOfSpeech partOfSpeech}) definition;
 
   @override
   String toString() {

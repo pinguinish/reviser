@@ -1,43 +1,56 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:reviser/core/router/router.dart';
 import 'package:reviser/core/utils/logger.dart';
-import 'package:reviser/features/search/widgets/search_scope.dart';
-import '../../../../core/constant/palette.dart';
+import 'package:reviser/features/common/core/list_item.dart';
+import 'package:reviser/features/common/core/part_of_speech.dart';
+import 'package:reviser/features/vocabulary/widgets/_temp_/definition_tile.dart';
 import '../../../common/domain/entities/word_entity.dart';
 
 typedef Definition = ({
   DefinitionEntity definition,
-  String partOfSpeech,
+  PartOfSpeech partOfSpeech,
 });
 
 class DefinitionList extends StatefulWidget {
   const DefinitionList({
     super.key,
     required this.definitions,
+    required this.onChanged,
   });
 
   final List<Definition> definitions;
+  final Function(List<Definition>) onChanged;
 
   @override
   State<DefinitionList> createState() => _DefinitionListState();
 }
 
 class _DefinitionListState extends State<DefinitionList> {
+  final List<Definition> selectedDefinitions = [];
+  final List<ListItem<Definition>> selectableDefinitions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    final selectableItems = widget.definitions.map(
+      (d) => ListItem<Definition>(d),
+    );
+    selectableDefinitions.addAll(selectableItems);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverList.separated(
       itemCount: widget.definitions.length,
       itemBuilder: (context, index) {
         return GestureDetector(
-          onLongPress: ()  async {
-            widget.definitions[index] = await navigateToVocabularyItemEditor(context, index);
-            setState(() {
-              
-            });
-          },
+          onTap: () => select(index),
+          onLongPress: () => edit(index),
           child: DefinitionTile(
-            data: widget.definitions[index],
+            data: selectableDefinitions[index].data,
+            isSelected: selectableDefinitions[index].isSelected,
           ),
         );
       },
@@ -45,62 +58,62 @@ class _DefinitionListState extends State<DefinitionList> {
     );
   }
 
-  Future<Definition> navigateToVocabularyItemEditor(
+  // Used to select a prticular item of the [selectableDefinitions]
+  // then notify using [onChanged]
+  void select(int index) {
+    final isSelected = selectableDefinitions[index].isSelected;
+    selectableDefinitions[index].isSelected = !isSelected;
+
+    if (selectableDefinitions[index].isSelected) {
+      selectedDefinitions.add(selectableDefinitions[index].data);
+    } else {
+      selectedDefinitions.remove(selectableDefinitions[index].data);
+    }
+    setState(() {});
+
+    widget.onChanged(selectedDefinitions);
+  }
+
+  // Used to edit items
+  //
+  // First of all it navigates to [VocabularyItemEditor]
+  // Then if an user edit the data of an item, it updates
+  // Otherwise it does nothing
+  Future<void> edit(int index) async {
+    final data = await _navigateToVocabularyItemEditor(context, index);
+
+    if (data == null) return;
+
+    final selectableItem = selectableDefinitions[index].data;
+
+    if (selectedDefinitions.contains(selectableItem)) {
+      final selectedItemIndex = selectedDefinitions.indexWhere(
+        (element) => element == selectableDefinitions[index].data,
+      );
+      selectedDefinitions[selectedItemIndex] = data;
+    }
+
+    setState(() {
+      selectableDefinitions[index].data = data;
+    });
+  }
+
+  // Used to navigate to [VocabularyItemEditor]
+  // Also it returns [Definitions]
+  Future<Definition?> _navigateToVocabularyItemEditor(
     BuildContext context,
     int index,
   ) async {
-   final data = await context.router.push(
+    final data = await context.router.push(
       VocabularyItemEditorRoute(
-        definition: widget.definitions[index],
+        definition: selectableDefinitions[index].data,
       ),
     );
-   return data! as Definition;
-  }
-}
-
-class DefinitionTile extends StatelessWidget {
-  const DefinitionTile({
-    super.key,
-    required this.data,
-  });
-
-  final Definition data;
-
-  @override
-  Widget build(BuildContext context) {
-    final example = data.definition.example;
-    return Container(
-      decoration: BoxDecoration(
-        color: Palette.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            RichText(
-              textScaleFactor: MediaQuery.of(context).textScaleFactor,
-              text: TextSpan(
-                style: const TextStyle(color: Colors.black),
-                children: [
-                  TextSpan(
-                    text: "[${data.partOfSpeech}] ",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  TextSpan(text: data.definition.definition),
-                ],
-              ),
-            ),
-            if (example.isNotEmpty)
-              Text(
-                data.definition.example,
-                style: const TextStyle(fontSize: 10),
-              ),
-          ],
-        ),
-      ),
+    if (data is Definition?) return data;
+    logger.f(
+      """Caught unexpected behavoiour."""
+      """VocabularyItemEditorRoute returns a value whose type is other than nullable-[Definition]""",
     );
+    return null;
   }
 }

@@ -1,4 +1,5 @@
-
+import 'package:dio/dio.dart';
+import 'package:reviser/core/errors/network_exception.dart';
 import 'package:reviser/core/errors/not_found_exception.dart';
 import 'package:reviser/features/search/data/models/word/word_mapper_extension.dart';
 import 'package:reviser/features/search/data/source/remote/i_search_remote_data_source.dart';
@@ -19,6 +20,8 @@ final class SearchRepository implements ISearchRepository {
       return wordData.map((e) => e.toEntity()).toList();
     } on NotFoundWordException {
       return [];
+    } on DioException {
+      throw const NetworkException();
     } on Object {
       rethrow;
     }

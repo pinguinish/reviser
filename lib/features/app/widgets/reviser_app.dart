@@ -4,6 +4,7 @@ import "package:reviser/core/theme/reviser_app_theme.dart";
 import "package:reviser/core/utils/screen_util.dart";
 import "package:reviser/features/initialization/models/dependencies.dart";
 
+final scaffoldMessangerKey = GlobalKey<ScaffoldMessengerState>();
 
 class ReviserApp extends StatelessWidget {
   const ReviserApp({
@@ -13,7 +14,7 @@ class ReviserApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp.router(
         builder: (context, child) {
-          final device = ScreenUtil.deviceTypeOf(View.of(context).display.size);
+          final device = ScreenUtil.deviceTypeOf(MediaQuery.of(context).size);
           final data = MediaQuery.of(context).copyWith(
             textScaleFactor: device.textScaleFactor,
           );
@@ -22,13 +23,17 @@ class ReviserApp extends StatelessWidget {
             child: child!,
           );
         },
-        theme: ReviserAppTheme.lightTheme.copyWith(
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ).applyAllExtension(),
-        darkTheme: ReviserAppTheme.darkTheme.copyWith(
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ).applyAllExtension(),
+        scaffoldMessengerKey: scaffoldMessangerKey,
+        theme: ReviserAppTheme.lightTheme
+            .copyWith(
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            )
+            .applyAllExtension(),
+        darkTheme: ReviserAppTheme.darkTheme
+            .copyWith(
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            )
+            .applyAllExtension(),
         routerConfig: Dependencies.of(context).router.config(),
       );
-
 }

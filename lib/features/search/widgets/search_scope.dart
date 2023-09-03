@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/core/utils/mixins/scope_mixin.dart';
 import 'package:reviser/features/initialization/models/dependencies.dart';
 import 'package:reviser/features/search/bloc/search_bloc.dart';
@@ -9,6 +8,16 @@ import 'package:reviser/features/search/bloc/search_state.dart';
 import 'package:reviser/features/common/domain/entities/word_entity.dart';
 
 typedef SearchCallback = Function(String);
+
+typedef ErrorSearchWidgetBuilder = Widget Function(
+  BuildContext context,
+  SearchError error,
+);
+
+typedef SuccessSearchWidgetBuilder = Widget Function(
+  BuildContext context,
+  List<WordEntity> result,
+);
 
 /// SearchScope is propogated to the widget tree and works a
 /// s an util to look up searching word in the dictionary
@@ -36,6 +45,12 @@ class SearchScope extends StatefulWidget {
   }) =>
       ScopeMixin.scopeOf<_InheritedSearch>(context, listen: listen).words;
 
+  static List<WordEntity>? wordsMaybeOf(
+    BuildContext context, {
+    final listen = true,
+  }) =>
+      ScopeMixin.scopeMaybeOf<_InheritedSearch>(context, listen: listen)?.words;
+
   /// Look up a word in the dictionary
   ///
   /// Notify bloc sending the search event incorporating [match]
@@ -48,6 +63,27 @@ class SearchScope extends StatefulWidget {
     final scope = _of(context);
     scope.bloc.add(SearchStarted(word: match));
     if (onSearch != null) onSearch(match);
+  }
+
+  /// Returns the search result
+  static BlocBuilder<SearchBloc, SearchState> result({
+    required BuildContext context,
+    WidgetBuilder? processing,
+    SuccessSearchWidgetBuilder? success,
+    ErrorSearchWidgetBuilder? error,
+  }) {
+    return BlocBuilder<SearchBloc, SearchState>(
+      bloc: SearchScope.blocOf(context),
+      builder: (_, state) => switch (state) {
+        SearchIdle _ => const SizedBox.shrink(),
+        SearchProsessing _ =>
+          processing == null ? const SizedBox.shrink() : processing(context),
+        SearchSuccess(words: final words) =>
+          success == null ? const SizedBox.shrink() : success(context, words),
+        SearchError _ =>
+          error == null ? const SizedBox.shrink() : error(context, state),
+      },
+    );
   }
 
   @override
@@ -75,7 +111,6 @@ class _SearchScopeState extends State<SearchScope> {
   Widget build(BuildContext context) => BlocProvider<SearchBloc>.value(
         value: bloc,
         child: BlocBuilder<SearchBloc, SearchState>(builder: (_, state) {
-          logger.d(state.words);
           return _InheritedSearch(
             words: state.words,
             state: this,
@@ -86,7 +121,7 @@ class _SearchScopeState extends State<SearchScope> {
 }
 
 class _InheritedSearch extends InheritedWidget {
-  /// Search's state that provides opportunities 
+  /// Search's state that provides opportunities
   /// to manipulate with [SearchBloc] by [InheritedWidget] and the Widget tree
   final _SearchScopeState state;
 

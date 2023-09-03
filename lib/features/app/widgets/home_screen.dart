@@ -23,17 +23,20 @@ class _SmallHomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            SliverToBoxAdapter(child: SizedBox(height: 100)),
-            SliverPadding(
+            const SliverToBoxAdapter(child: SizedBox(height: 100)),
+            const SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               sliver: SliverToBoxAdapter(
                 child: Search(),
               ),
             ),
+            if (context.deviceType is LargeDeviceType) ...[
+              // [TODO]: Implement the search feature for large device typies
+            ]
           ],
         ),
       ),
@@ -75,29 +78,13 @@ class _LargeHomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //  Column(
-    //         mainAxisAlignment: MainAxisAlignment.center,
-    //         crossAxisAlignment: CrossAxisAlignment.center,
-    //         children: [
-    //           SizedBox(
-    //             width: MediaQuery.of(context).size.width * 0.6,
-    //             child: const Search(),
-    //           ),
-    //           const SizedBox(height: 10),
-    //           const Text(
-    //             "Your assistant for improving English vocabulary - find, learn, memorize and revise",
-    //             style: TextStyle(color: Palette.grey, fontSize: 12),
-    //           ),
-    //           const SizedBox(height: 20),
-    //         ],
-    //       )
     return const Scaffold(
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(child: SizedBox(height: 100)),
             SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 600),
               sliver: SliverToBoxAdapter(
                 child: Search(),
               ),

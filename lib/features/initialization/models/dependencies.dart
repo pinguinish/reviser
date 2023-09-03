@@ -15,21 +15,28 @@ abstract class Dependencies {
 
   abstract final AppRouter router;
 
+  abstract final Dio httpClient;
+
   abstract final ISearchRemoteDataSource searchRemoteDataSource;
   abstract final ISearchRepository searchRepository;
 }
 
-final class ImmutableDependencies extends Dependencies {
-  ImmutableDependencies();
+final class MutableDependencies extends Dependencies {
+  MutableDependencies();
+
+  @override
+  late final Dio httpClient = Dio(BaseOptions(
+    connectTimeout: const Duration(seconds: 20),
+    receiveTimeout: const Duration(seconds: 15),
+  ));
 
   @override
   late final ISearchRemoteDataSource searchRemoteDataSource =
-      SearchRemoteDataSource(Dio());
+      SearchRemoteDataSource(httpClient);
 
   @override
-  late final ISearchRepository searchRepository = SearchRepository(
-    searchRemoteDataSource: searchRemoteDataSource,
-  );
+  late final ISearchRepository searchRepository =
+      SearchRepository(searchRemoteDataSource: searchRemoteDataSource);
 
   @override
   late final AppRouter router = AppRouter();

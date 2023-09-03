@@ -1,8 +1,9 @@
 import "package:auto_route/auto_route.dart";
 import "package:flutter/material.dart";
 import "package:reviser/features/app/widgets/home_screen.dart";
-import "package:reviser/features/search/widgets/_temp_/definition_list.dart";
-import 'package:reviser/features/search/widgets/_temp_/repository_screen.dart';
+import 'package:reviser/features/common/core/part_of_speech.dart';
+import "package:reviser/features/common/domain/entities/word_entity.dart";
+import 'package:reviser/features/vocabulary/widgets/_temp_/repository_screen.dart';
 import "package:reviser/features/vocabulary/widgets/vocabulary_item_editor.dart";
 
 
