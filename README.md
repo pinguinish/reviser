@@ -27,9 +27,9 @@
 
 держи картинок. спасибо за ревью :)
 
-<img src="https://github.com/zaferlerim/reviser/tree/main/assets/_readme_/images/0" height="500">
-<img src="https://github.com/zaferlerim/reviser/tree/main/assets/_readme_/images/1" height="500">
-<img src="https://github.com/zaferlerim/reviser/tree/main/assets/_readme_/images/2" height="500">
-<img src="https://github.com/zaferlerim/reviser/tree/main/assets/_readme_/images/3" height="500">
-<img src="https://github.com/zaferlerim/reviser/tree/main/assets/_readme_/images/4" height="500">
-<img src="https://github.com/zaferlerim/reviser/tree/main/assets/_readme_/images/5" height="500">
+<img src="https://github.com/zaferlerim/reviser/tree/main/assets/_readme_/images/0.jpg" height="500">
+<img src="https://github.com/zaferlerim/reviser/tree/main/assets/_readme_/images/1.jpg" height="500">
+<img src="https://github.com/zaferlerim/reviser/tree/main/assets/_readme_/images/2.jpg" height="500">
+<img src="https://github.com/zaferlerim/reviser/tree/main/assets/_readme_/images/3.jpg" height="500">
+<img src="https://github.com/zaferlerim/reviser/tree/main/assets/_readme_/images/4.jpg" height="500">
+<img src="https://github.com/zaferlerim/reviser/tree/main/assets/_readme_/images/5.jpg" height="500">
