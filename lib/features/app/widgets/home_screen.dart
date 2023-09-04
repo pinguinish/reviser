@@ -80,7 +80,7 @@ class _MediumHomeView extends StatelessWidget {
         ),
       ),
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(right: 20, bottom: 20),
+        padding: EdgeInsets.only(right: 60, bottom: 60),
         child: DictionaryLookupButton(),
       ),
     );

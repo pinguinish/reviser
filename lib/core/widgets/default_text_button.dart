@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reviser/core/bloc/constant/palette.dart';
+import 'package:reviser/core/utils/screen_util.dart';
 import '../bloc/constant/dimension.dart';
 
 class DefaultTextButton extends StatelessWidget {
@@ -19,7 +20,8 @@ class DefaultTextButton extends StatelessWidget {
         style: TextButton.styleFrom(
           padding: EdgeInsets.symmetric(
             horizontal: horizontal,
-            vertical: vertical,
+            // [WARNING]: Don't do this. (I'm just a bit lazy)
+            vertical: context.deviceType is MediumDeviceType ? vertical : vertical + 10,
           ),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
