@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:reviser/core/router/router.dart';
+import 'package:reviser/features/common/router/router.dart';
 import 'package:reviser/features/initialization/widgets/dependencies_scope.dart';
 import 'package:reviser/features/search/data/repository/search_repository.dart';
 import 'package:reviser/features/search/data/sources/remote/free_dictionary_api/search_remote_data_source.dart';

@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reviser/core/router/router.dart';
 import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/features/common/core/list_item.dart';
 import 'package:reviser/features/common/core/part_of_speech.dart';
+import 'package:reviser/features/common/router/router.dart';
 import 'package:reviser/features/vocabulary/widgets/definition_tile.dart';
 import '../../common/domain/entities/word_entity.dart';
 

@@ -22,14 +22,10 @@ class ReviserApp extends StatelessWidget {
           );
         },
         theme: ReviserAppTheme.lightTheme
-            .copyWith(
-              visualDensity: VisualDensity.adaptivePlatformDensity,
-            )
+            .copyWith(visualDensity: VisualDensity.adaptivePlatformDensity)
             .applyAllExtension(),
         darkTheme: ReviserAppTheme.darkTheme
-            .copyWith(
-              visualDensity: VisualDensity.adaptivePlatformDensity,
-            )
+            .copyWith(visualDensity: VisualDensity.adaptivePlatformDensity)
             .applyAllExtension(),
         routerConfig: Dependencies.of(context).router.config(),
       );

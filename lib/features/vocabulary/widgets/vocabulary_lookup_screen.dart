@@ -75,13 +75,12 @@ class _VocabularyItemData extends StatelessWidget {
                 wordData.word,
                 style: Theme.of(context).textTheme.displayLarge,
               ),
-              ...definitionsData
-                  .asMap()
-                  .entries
-                  .map((definitionMap) => _DefinitionDataItem(
-                        index: definitionMap.key + 1,
-                        definition: definitionMap.value,
-                      )),
+              ...definitionsData.asMap().entries.map(
+                    (definitionMap) => _DefinitionDataItem(
+                      index: definitionMap.key + 1,
+                      definition: definitionMap.value,
+                    ),
+                  ),
             ],
           ),
           Positioned(

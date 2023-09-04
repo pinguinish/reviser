@@ -11,4 +11,11 @@ class AppTextTheme extends TextTheme {
         fontSize: 42,
         fontWeight: FontWeight.bold,
       );
+
+  @override
+  // TODO: implement displayMedium
+  TextStyle? get displayMedium => const TextStyle(
+    color: Palette.black, 
+    fontSize: 24,
+  );
 }

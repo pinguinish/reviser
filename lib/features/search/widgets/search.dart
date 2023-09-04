@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:reviser/core/bloc/constant/dimension.dart';
 import 'package:reviser/core/bloc/constant/palette.dart';
 import 'package:reviser/core/bloc/constant/strings.dart';
-import 'package:reviser/core/router/router.dart';
 import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/core/utils/mixins/validator_mixin.dart';
 import 'package:reviser/core/utils/screen_util.dart';
+import 'package:reviser/features/common/router/router.dart';
 import 'package:reviser/features/initialization/models/dependencies.dart';
 import 'package:reviser/features/search/widgets/search_scope.dart';
 

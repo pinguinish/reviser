@@ -14,7 +14,6 @@ Future<void> initializeApp({
 }) async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
-    if (kReleaseMode) Logger.level = Level.info;
     // if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
     //   WidgetsFlutterBinding.ensureInitialized();
     //   setWindowMinSize(const Size(800, 500));

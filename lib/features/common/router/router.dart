@@ -5,7 +5,7 @@ import 'package:reviser/features/common/core/part_of_speech.dart';
 import "package:reviser/features/common/domain/entities/word_entity.dart";
 import 'package:reviser/features/vocabulary/widgets/repository_screen.dart';
 import "package:reviser/features/vocabulary/widgets/vocabulary_item_editor.dart";
-import "package:reviser/features/vocabulary/widgets/vocabulary_lookup.dart";
+import 'package:reviser/features/vocabulary/widgets/vocabulary_lookup_screen.dart';
 
 
 part 'router.gr.dart';
