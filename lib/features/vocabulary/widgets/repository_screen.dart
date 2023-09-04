@@ -1,6 +1,6 @@
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reviser/core/bloc/constant/dimension.dart';
 import 'package:reviser/core/bloc/constant/palette.dart';
 import 'package:reviser/core/bloc/constant/strings.dart';
@@ -8,8 +8,6 @@ import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/core/widgets/default_text_button.dart';
 import 'package:reviser/core/widgets/gaps.dart';
 import 'package:reviser/features/common/domain/entities/word_entity.dart';
-import 'package:reviser/features/vocabulary/bloc/vocabulary_bloc.dart';
-import 'package:reviser/features/vocabulary/bloc/vocabulary_event.dart';
 import 'package:reviser/features/vocabulary/domain/entities/vocabulary_entities.dart';
 import 'package:reviser/features/vocabulary/widgets/vocabulary_scope.dart';
 
@@ -111,33 +109,14 @@ class _RepositorySuccessState extends State<_RepositorySuccess> {
         sliverDefaultVerticalGap,
         DefinitionList(
           definitions: definitions,
-          onChanged: (selected) {
-            // [TODO]: Handle onChanged
-            definitions = selected;
-          },
+          onChanged: (selected) => definitions = selected,
         ),
         sliverDefaultVerticalGap,
         SliverToBoxAdapter(
           child: SizedBox(
             width: double.infinity,
             child: DefaultTextButton(
-              onPressed: () {
-                final data = VocabularyWordEntity(
-                  word: widget.result.first.word,
-                );
-
-                final definitionEntities = definitions.map(
-                  (d) {
-                    return VocabularyDefinitionEntity(
-                      definition: d.definition.definition,
-                      partOfSpeech: d.partOfSpeech,
-                      example: d.definition.example,
-                    );
-                  },
-                ).toList();
-
-                VocabularyScope.saveWords(data, definitionEntities, context);
-              },
+              onPressed: _save,
               text: Strings.save,
             ),
           ),
@@ -145,6 +124,25 @@ class _RepositorySuccessState extends State<_RepositorySuccess> {
         sliverLargerVerticalGap,
       ],
     );
+  }
+
+  void _save() {
+    final data = VocabularyWordEntity(
+      word: widget.result.first.word,
+    );
+
+    final definitionEntities = definitions.map(
+      (d) {
+        return VocabularyDefinitionEntity(
+          definition: d.definition.definition,
+          partOfSpeech: d.partOfSpeech,
+          example: d.definition.example,
+        );
+      },
+    ).toList();
+
+    VocabularyScope.saveWords(data, definitionEntities, context);
+    context.router.pop();
   }
 }
 
@@ -202,6 +200,6 @@ class _RepositoryError extends StatelessWidget {
       """Caught error in $runtimeType."""
       """None of the allowable conditions have processed. The word is `${errorState.words.first}`""",
     );
-    return const SizedBox.shrink();
+    return const SliverToBoxAdapter(child: Text(Strings.somethingWentWrong));
   }
 }

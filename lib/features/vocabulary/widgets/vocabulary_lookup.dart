@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reviser/core/bloc/constant/dimension.dart';
+import 'package:reviser/core/bloc/constant/palette.dart';
+import 'package:reviser/core/widgets/gaps.dart';
 import 'package:reviser/features/vocabulary/bloc/vocabulary_bloc.dart';
 import 'package:reviser/features/vocabulary/bloc/vocabulary_state.dart';
 import 'package:reviser/features/vocabulary/domain/entities/vocabulary_entities.dart';
@@ -30,11 +33,15 @@ class VocabularyLookup extends StatelessWidget {
                 VocabularySuccess(words: final words) => SliverList.separated(
                     itemCount: words.length,
                     itemBuilder: (_, index) {
-                      return _VocabularyItemData(word: words[index]);
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Dimension.contentSidePadding,
+                        ),
+                        child: _VocabularyItemData(item: words[index]),
+                      );
                     },
                     separatorBuilder: (_, __) => const Divider(),
                   ),
-                // TODO: Handle this case.
                 VocabularyError() => const SliverToBoxAdapter(
                     child: Text("Error has occured"),
                   ),
@@ -49,43 +56,75 @@ class VocabularyLookup extends StatelessWidget {
 }
 
 class _VocabularyItemData extends StatelessWidget {
-  const _VocabularyItemData({required this.word});
+  const _VocabularyItemData({required this.item});
 
-  final FullVocabularyItem word;
+  final FullVocabularyItem item;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              word.$1.word,
-              style: Theme.of(context).textTheme.displayLarge,
-            ),
-            ...word.$2.map((e) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(e.definition),
-                  if (e.example.isNotEmpty) Text(e.example),
-                  const SizedBox(
-                    height: 30,
-                  )
-                ],
-              );
-            }),
-          ],
-        ),
-        Positioned(
-          right: 0,
-          top: 0,
-          child: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.highlight_remove_outlined),
+    final (wordData, definitionsData) = item;
+    return Container(
+      color: Palette.white,
+      padding: const EdgeInsets.all(Dimension.cardPadding),
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                wordData.word,
+                style: Theme.of(context).textTheme.displayLarge,
+              ),
+              ...definitionsData
+                  .asMap()
+                  .entries
+                  .map((definitionMap) => _DefinitionDataItem(
+                        index: definitionMap.key + 1,
+                        definition: definitionMap.value,
+                      )),
+            ],
           ),
-        ),
+          Positioned(
+            right: 0,
+            top: 0,
+            child: IconButton(
+              color: Palette.indigo,
+              onPressed: () {},
+              icon: const Icon(Icons.highlight_remove_outlined),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DefinitionDataItem extends StatelessWidget {
+  const _DefinitionDataItem({
+    required this.index,
+    required this.definition,
+  });
+
+  final int index;
+  final VocabularyDefinitionEntity definition;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("$index. ${definition.definition}"),
+        if (definition.example.isNotEmpty) ...[
+          smallVerticalGap,
+          Text(
+            definition.example,
+            style: const TextStyle(
+              fontSize: 10,
+              color: Palette.grey,
+            ),
+          ),
+        ],
+        defaultVerticalGap,
       ],
     );
   }

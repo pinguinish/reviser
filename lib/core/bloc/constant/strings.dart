@@ -6,6 +6,7 @@ abstract class Strings {
   static const hintDefinition = "definition";
   static const hintExample = "example";
   static const dictionary = "dictionary";
+  static const somethingWentWrong = "Something went wrong";
 
   static String resultDefinitionLength(int length) => "Result: $length definitions";
 }
