@@ -1,6 +1,7 @@
+
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:reviser/core/errors/network_conntection_exception.dart';
+import 'package:reviser/core/errors/network_exception.dart';
 import 'package:reviser/features/search/bloc/search_event.dart';
 import 'package:reviser/features/search/bloc/search_state.dart';
 import 'package:reviser/features/search/domain/repository/i_search_repository.dart';
@@ -23,10 +24,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       final data = await _repository.search(match);
       if (data.isEmpty) return emit(const SearchError(isNotFound: true));
       emit(SearchSuccess(words: data));
-    } on NoInternetConnection {
-      emit(SearchError.network(noInternetConnection: true));
-    } on BadInternetConnection {
-      emit(SearchError.network(badConnection: true));
+    } on NetworkException {
+      emit(const SearchNetworkError());
     } on Object {
       emit(const SearchError());
       rethrow;

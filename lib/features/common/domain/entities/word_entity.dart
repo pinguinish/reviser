@@ -2,6 +2,7 @@
 // Right now it doens't requires decoupling at all
 
 import 'package:equatable/equatable.dart';
+import 'package:reviser/features/common/core/part_of_speech.dart';
 
 class WordEntity extends Equatable {
   final String word;
@@ -21,7 +22,7 @@ class WordEntity extends Equatable {
 }
 
 class MeaningEntity extends Equatable {
-  final String partOfSpeech;
+  final PartOfSpeech partOfSpeech;
   final List<DefinitionEntity> definitions;
 
   const MeaningEntity({

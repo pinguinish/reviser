@@ -21,7 +21,7 @@ Future<void> initializeApp({
     // }
     Bloc.observer = AppBlocObserver();
     _catchDartFlutterErrors();
-    onSuccess(ImmutableDependencies());
+    onSuccess(MutableDependencies());
   } on Object catch (e, s) {
     onError(e, s);
     logger.e("Failed to initialize app", error: e, stackTrace: s);

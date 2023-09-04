@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:reviser/features/common/core/part_of_speech.dart';
 
 import '../definition/definition_model.dart';
 
@@ -14,7 +15,7 @@ class MeaningModel extends Equatable {
     required this.antonyms,
   });
 
-  final String partOfSpeech;
+  final PartOfSpeech partOfSpeech;
   final List<DefinitionModel> definitions;
   final List<String> synonyms;
   final List<String> antonyms;

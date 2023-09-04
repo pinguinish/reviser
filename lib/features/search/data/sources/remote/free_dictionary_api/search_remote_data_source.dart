@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:dio/dio.dart';
-import 'package:reviser/core/errors/network_conntection_exception.dart';
 import 'package:reviser/core/errors/not_found_exception.dart';
+import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/features/search/data/models/word/word_model.dart';
-import 'package:reviser/features/search/data/source/remote/i_search_remote_data_source.dart';
+import 'package:reviser/features/search/data/sources/remote/i_search_remote_data_source.dart';
 
-final class SearchRemoteDataSource implements ISearchRemoteDataSource {
-  const SearchRemoteDataSource(this._client);
+final class FreeDicionaryRemoteDataSource implements ISearchRemoteDataSource {
+  const FreeDicionaryRemoteDataSource(this._client);
 
   final Dio _client;
 
@@ -61,21 +61,17 @@ final class SearchRemoteDataSource implements ISearchRemoteDataSource {
   ///
   /// the core method to request
   /// [word] is a searched word
-  ///
   Future<List<WordModel>> _getDataWord(String word) async {
     try {
-      final data = await _client
-          .get("$kFreeDictionaryApiEndpoint$word")
-          .timeout(const Duration(seconds: 10));
+      final data = await _client.get("$kFreeDictionaryApiEndpoint$word");
+
+      logger.d("Data: $data");
       return (data.data as List).map((e) => WordModel.fromJson(e)).toList();
     } on DioException catch (e) {
       if (e.response?.statusCode == HttpStatus.notFound) {
         throw NotFoundWordException(word: word);
       }
-      if (e.error is SocketException) throw const NoInternetConnection();
       rethrow;
-    } on TimeoutException {
-      throw const BadInternetConnection();
     } on Object {
       rethrow;
     }

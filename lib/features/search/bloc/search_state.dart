@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:reviser/core/bloc/network_connection_state.dart';
 import 'package:reviser/features/common/domain/entities/word_entity.dart';
 
 sealed class SearchState extends Equatable {
@@ -28,30 +27,9 @@ class SearchError extends SearchState {
   const SearchError({
     this.isNotFound = false,
   });
-
-  factory SearchError.network({
-    bool noInternetConnection = false,
-    bool badConnection = false,
-  }) {
-    return SearchNetworkError(
-      noInternetConnection: noInternetConnection,
-      badConnection: badConnection,
-    );
-  }
 }
 
-class SearchNetworkError extends SearchError implements NetworkConnectionState  {
-  const SearchNetworkError({
-    this.noInternetConnection = false,
-    this.badConnection = false,
-  });
-
-  
-
-  @override
-  final bool noInternetConnection;
-
-  @override
-  final bool badConnection;
+final class SearchNetworkError extends SearchError {
+  const SearchNetworkError();
 }
 
