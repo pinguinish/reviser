@@ -2,9 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:reviser/core/utils/logger.dart';
 
 class AppBlocObserver extends BlocObserver {
-
-  
-
   @override
   void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
     logger.e(
@@ -22,11 +19,10 @@ class AppBlocObserver extends BlocObserver {
     super.onEvent(bloc, event);
   }
 
-
   @override
   void onTransition(Bloc bloc, Transition transition) {
-    logger.i("[${bloc.runtimeType}]: ${transition.currentState.runtimeType} -> ${transition.nextState.runtimeType}");
+    logger.i(
+        "[${bloc.runtimeType}]: ${transition.currentState.runtimeType} -> ${transition.nextState.runtimeType}");
     super.onTransition(bloc, transition);
-
   }
 }

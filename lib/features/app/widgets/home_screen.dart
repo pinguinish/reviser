@@ -1,6 +1,12 @@
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:reviser/core/bloc/constant/dimension.dart';
+import 'package:reviser/core/bloc/constant/palette.dart';
+import 'package:reviser/core/bloc/constant/strings.dart';
+import 'package:reviser/core/router/router.dart';
 import 'package:reviser/core/utils/screen_util.dart';
+import 'package:reviser/core/widgets/gaps.dart';
 import 'package:reviser/features/search/widgets/search.dart';
 
 @RoutePage(name: "InitialRoute")
@@ -23,15 +29,48 @@ class _SmallHomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            SliverToBoxAdapter(child: SizedBox(height: 100)),
             SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverToBoxAdapter(
-                child: Search(),
+              padding: const EdgeInsets.symmetric(
+                horizontal: Dimension.contentSidePadding,
+              ),
+              sliver: SliverMainAxisGroup(
+                slivers: [
+                  const SliverToBoxAdapter(child: SizedBox(height: 100)),
+                  const SliverToBoxAdapter(child: Search()),
+                  sliverDefaultVerticalGap,
+                  SliverToBoxAdapter(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                        ),
+                        backgroundColor: Palette.indigo,
+                        foregroundColor: Palette.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            Dimension.defaultRadius,
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        context.router.push(const VocabularyLookupRoute());
+                      },
+                      child: const Column(
+                        children: [
+                          Icon(Icons.book_rounded),
+                          Text(Strings.dictionary),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (context.deviceType is LargeDeviceType) ...[
+                    // [TODO]: Implement the search feature for large device typies
+                  ]
+                ],
               ),
             ),
           ],
@@ -75,29 +114,13 @@ class _LargeHomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //  Column(
-    //         mainAxisAlignment: MainAxisAlignment.center,
-    //         crossAxisAlignment: CrossAxisAlignment.center,
-    //         children: [
-    //           SizedBox(
-    //             width: MediaQuery.of(context).size.width * 0.6,
-    //             child: const Search(),
-    //           ),
-    //           const SizedBox(height: 10),
-    //           const Text(
-    //             "Your assistant for improving English vocabulary - find, learn, memorize and revise",
-    //             style: TextStyle(color: Palette.grey, fontSize: 12),
-    //           ),
-    //           const SizedBox(height: 20),
-    //         ],
-    //       )
     return const Scaffold(
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(child: SizedBox(height: 100)),
             SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 600),
               sliver: SliverToBoxAdapter(
                 child: Search(),
               ),

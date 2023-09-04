@@ -8,7 +8,7 @@ abstract class ScreenDimension {
 
 abstract class DeviceTextScaleFactor {
   static const double small = 1;
-  static const double medium = 1.4;
+  static const double medium = 1.3;
   static const double large = 1;
 }
 
@@ -19,16 +19,33 @@ Widget callDeviceBuilderCheckingNull(
     builder == null ? const SizedBox.shrink() : builder(context);
 
 extension ScreenUtilExtension on BuildContext {
+  DeviceType get deviceType =>
+      ScreenUtil.deviceTypeOf(MediaQuery.of(this).size);
+
   Widget adaptByDeviceType({
     WidgetBuilder? large,
     WidgetBuilder? medium,
     WidgetBuilder? small,
+  }) {
+    return switch (ScreenUtil.deviceTypeOf(MediaQuery.of(this).size)) {
+      LargeDeviceType _ => callDeviceBuilderCheckingNull(large, this),
+      MediumDeviceType _ => callDeviceBuilderCheckingNull(medium, this),
+      SmallDeviceType _ => callDeviceBuilderCheckingNull(small, this),
+    };
+  }
+
+  void performActionByDeviceType({
+    VoidCallback? large,
+    VoidCallback? medium,
+    VoidCallback? small,
   }) =>
-      switch (ScreenUtil.deviceTypeOf(View.of(this).display.size)) {
-        LargeDeviceType _ => callDeviceBuilderCheckingNull(large, this),
-        MediumDeviceType _ => callDeviceBuilderCheckingNull(medium, this),
-        SmallDeviceType _ => callDeviceBuilderCheckingNull(small, this),
+      switch (ScreenUtil.deviceTypeOf(MediaQuery.of(this).size)) {
+        LargeDeviceType _ => large == null ? () {} : large(),
+        MediumDeviceType _ => medium == null ? () {} : medium(),
+        SmallDeviceType _ => small == null ? () {} : small(),
       };
+
+  void x() {}
 }
 
 class DeviceTypeException implements Exception {
@@ -47,10 +64,8 @@ class ScreenUtil {
           DeviceType.medium,
         (Size size) when size.width < DeviceType.large.size.$2 =>
           DeviceType.large,
-        _ =>
-          throw DeviceTypeException("Undefined device type with Size($size)"),
+        _ => throw DeviceTypeException("Undefined device type with $size"),
       };
-
 }
 
 @immutable
@@ -95,7 +110,8 @@ final class MediumDeviceType extends DeviceType {
 final class SmallDeviceType extends DeviceType {
   const SmallDeviceType()
       : super(
-            representation: "Small",
-            size: ScreenDimension.small,
-            textScaleFactor: DeviceTextScaleFactor.small);
+          representation: "Small",
+          size: ScreenDimension.small,
+          textScaleFactor: DeviceTextScaleFactor.small,
+        );
 }
