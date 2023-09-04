@@ -1,9 +1,9 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:reviser/core/constant/dimension.dart';
-import 'package:reviser/core/constant/palette.dart';
-import 'package:reviser/core/constant/strings.dart';
+import 'package:reviser/core/bloc/constant/dimension.dart';
+import 'package:reviser/core/bloc/constant/palette.dart';
+import 'package:reviser/core/bloc/constant/strings.dart';
 import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/core/widgets/default_text_button.dart';
 import 'package:reviser/core/widgets/gaps.dart';
@@ -11,10 +11,11 @@ import 'package:reviser/features/common/domain/entities/word_entity.dart';
 import 'package:reviser/features/vocabulary/bloc/vocabulary_bloc.dart';
 import 'package:reviser/features/vocabulary/bloc/vocabulary_event.dart';
 import 'package:reviser/features/vocabulary/domain/entities/vocabulary_entities.dart';
+import 'package:reviser/features/vocabulary/widgets/vocabulary_scope.dart';
 
-import '../../../search/bloc/search_state.dart';
-import '../../../search/widgets/search.dart';
-import '../../../search/widgets/search_scope.dart';
+import '../../search/bloc/search_state.dart';
+import '../../search/widgets/search.dart';
+import '../../search/widgets/search_scope.dart';
 import 'definition_list.dart';
 
 // [TODO]: it doesn't work with homonyms so fix it later
@@ -121,21 +122,21 @@ class _RepositorySuccessState extends State<_RepositorySuccess> {
             width: double.infinity,
             child: DefaultTextButton(
               onPressed: () {
-                // final word = VocabularyWordEntity(
-                //   word: "Word",
-                //   definitions: definitions.map(
-                //     (d) {
-                //       return VocabularyDefinitionEntity(
-                //         definition: d.definition.definition,
-                //         partOfSpeech: d.partOfSpeech,
-                //         example: d.definition.example,
-                //       );
-                //     },
-                //   ).toList(),
-                // );
-                // context
-                //     .read<VocabularyBloc>()
-                //     .add(VocabularyWordAdded(word: word));
+                final data = VocabularyWordEntity(
+                  word: widget.result.first.word,
+                );
+
+                final definitionEntities = definitions.map(
+                  (d) {
+                    return VocabularyDefinitionEntity(
+                      definition: d.definition.definition,
+                      partOfSpeech: d.partOfSpeech,
+                      example: d.definition.example,
+                    );
+                  },
+                ).toList();
+
+                VocabularyScope.saveWords(data, definitionEntities, context);
               },
               text: Strings.save,
             ),

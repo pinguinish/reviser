@@ -5,8 +5,8 @@ import 'package:reviser/core/router/router.dart';
 import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/features/common/core/list_item.dart';
 import 'package:reviser/features/common/core/part_of_speech.dart';
-import 'package:reviser/features/vocabulary/widgets/_temp_/definition_tile.dart';
-import '../../../common/domain/entities/word_entity.dart';
+import 'package:reviser/features/vocabulary/widgets/definition_tile.dart';
+import '../../common/domain/entities/word_entity.dart';
 
 typedef Definition = ({
   DefinitionEntity definition,

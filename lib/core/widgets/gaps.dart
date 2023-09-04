@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reviser/core/constant/dimension.dart';
+import 'package:reviser/core/bloc/constant/dimension.dart';
 
 Widget sliverDefaultVerticalGap = const SliverToBoxAdapter(
       child: SizedBox(height: Dimension.defaultVerticalGap),

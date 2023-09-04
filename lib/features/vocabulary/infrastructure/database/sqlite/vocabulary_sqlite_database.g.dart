@@ -14,7 +14,7 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
       'id', aliasedName, false,
       hasAutoIncrement: true,
       type: DriftSqlType.int,
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
   static const VerificationMeta _wordMeta = const VerificationMeta('word');
@@ -26,16 +26,10 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
       const VerificationMeta('additionDate');
   @override
   late final GeneratedColumn<DateTime> additionDate = GeneratedColumn<DateTime>(
-      'addition_date', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _definitionIdsMeta =
-      const VerificationMeta('definitionIds');
+      'addition_date', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
   @override
-  late final GeneratedColumn<String> definitionIds = GeneratedColumn<String>(
-      'definition_ids', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [id, word, additionDate, definitionIds];
+  List<GeneratedColumn> get $columns => [id, word, additionDate];
   @override
   String get aliasedName => _alias ?? 'words';
   @override
@@ -47,8 +41,6 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('word')) {
       context.handle(
@@ -61,22 +53,12 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
           _additionDateMeta,
           additionDate.isAcceptableOrUnknown(
               data['addition_date']!, _additionDateMeta));
-    } else if (isInserting) {
-      context.missing(_additionDateMeta);
-    }
-    if (data.containsKey('definition_ids')) {
-      context.handle(
-          _definitionIdsMeta,
-          definitionIds.isAcceptableOrUnknown(
-              data['definition_ids']!, _definitionIdsMeta));
-    } else if (isInserting) {
-      context.missing(_definitionIdsMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id, word};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Word map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -85,10 +67,8 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       word: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}word'])!,
-      additionDate: attachedDatabase.typeMapping.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}addition_date'])!,
-      definitionIds: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}definition_ids'])!,
+      additionDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}addition_date']),
     );
   }
 
@@ -101,20 +81,16 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
 class Word extends DataClass implements Insertable<Word> {
   final int id;
   final String word;
-  final DateTime additionDate;
-  final String definitionIds;
-  const Word(
-      {required this.id,
-      required this.word,
-      required this.additionDate,
-      required this.definitionIds});
+  final DateTime? additionDate;
+  const Word({required this.id, required this.word, this.additionDate});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['word'] = Variable<String>(word);
-    map['addition_date'] = Variable<DateTime>(additionDate);
-    map['definition_ids'] = Variable<String>(definitionIds);
+    if (!nullToAbsent || additionDate != null) {
+      map['addition_date'] = Variable<DateTime>(additionDate);
+    }
     return map;
   }
 
@@ -122,8 +98,9 @@ class Word extends DataClass implements Insertable<Word> {
     return WordsCompanion(
       id: Value(id),
       word: Value(word),
-      additionDate: Value(additionDate),
-      definitionIds: Value(definitionIds),
+      additionDate: additionDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionDate),
     );
   }
 
@@ -133,8 +110,7 @@ class Word extends DataClass implements Insertable<Word> {
     return Word(
       id: serializer.fromJson<int>(json['id']),
       word: serializer.fromJson<String>(json['word']),
-      additionDate: serializer.fromJson<DateTime>(json['additionDate']),
-      definitionIds: serializer.fromJson<String>(json['definitionIds']),
+      additionDate: serializer.fromJson<DateTime?>(json['additionDate']),
     );
   }
   @override
@@ -143,96 +119,73 @@ class Word extends DataClass implements Insertable<Word> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'word': serializer.toJson<String>(word),
-      'additionDate': serializer.toJson<DateTime>(additionDate),
-      'definitionIds': serializer.toJson<String>(definitionIds),
+      'additionDate': serializer.toJson<DateTime?>(additionDate),
     };
   }
 
   Word copyWith(
           {int? id,
           String? word,
-          DateTime? additionDate,
-          String? definitionIds}) =>
+          Value<DateTime?> additionDate = const Value.absent()}) =>
       Word(
         id: id ?? this.id,
         word: word ?? this.word,
-        additionDate: additionDate ?? this.additionDate,
-        definitionIds: definitionIds ?? this.definitionIds,
+        additionDate:
+            additionDate.present ? additionDate.value : this.additionDate,
       );
   @override
   String toString() {
     return (StringBuffer('Word(')
           ..write('id: $id, ')
           ..write('word: $word, ')
-          ..write('additionDate: $additionDate, ')
-          ..write('definitionIds: $definitionIds')
+          ..write('additionDate: $additionDate')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, word, additionDate, definitionIds);
+  int get hashCode => Object.hash(id, word, additionDate);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Word &&
           other.id == this.id &&
           other.word == this.word &&
-          other.additionDate == this.additionDate &&
-          other.definitionIds == this.definitionIds);
+          other.additionDate == this.additionDate);
 }
 
 class WordsCompanion extends UpdateCompanion<Word> {
   final Value<int> id;
   final Value<String> word;
-  final Value<DateTime> additionDate;
-  final Value<String> definitionIds;
-  final Value<int> rowid;
+  final Value<DateTime?> additionDate;
   const WordsCompanion({
     this.id = const Value.absent(),
     this.word = const Value.absent(),
     this.additionDate = const Value.absent(),
-    this.definitionIds = const Value.absent(),
-    this.rowid = const Value.absent(),
   });
   WordsCompanion.insert({
-    required int id,
+    this.id = const Value.absent(),
     required String word,
-    required DateTime additionDate,
-    required String definitionIds,
-    this.rowid = const Value.absent(),
-  })  : id = Value(id),
-        word = Value(word),
-        additionDate = Value(additionDate),
-        definitionIds = Value(definitionIds);
+    this.additionDate = const Value.absent(),
+  }) : word = Value(word);
   static Insertable<Word> custom({
     Expression<int>? id,
     Expression<String>? word,
     Expression<DateTime>? additionDate,
-    Expression<String>? definitionIds,
-    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (word != null) 'word': word,
       if (additionDate != null) 'addition_date': additionDate,
-      if (definitionIds != null) 'definition_ids': definitionIds,
-      if (rowid != null) 'rowid': rowid,
     });
   }
 
   WordsCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? word,
-      Value<DateTime>? additionDate,
-      Value<String>? definitionIds,
-      Value<int>? rowid}) {
+      {Value<int>? id, Value<String>? word, Value<DateTime?>? additionDate}) {
     return WordsCompanion(
       id: id ?? this.id,
       word: word ?? this.word,
       additionDate: additionDate ?? this.additionDate,
-      definitionIds: definitionIds ?? this.definitionIds,
-      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -248,12 +201,6 @@ class WordsCompanion extends UpdateCompanion<Word> {
     if (additionDate.present) {
       map['addition_date'] = Variable<DateTime>(additionDate.value);
     }
-    if (definitionIds.present) {
-      map['definition_ids'] = Variable<String>(definitionIds.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
     return map;
   }
 
@@ -262,9 +209,7 @@ class WordsCompanion extends UpdateCompanion<Word> {
     return (StringBuffer('WordsCompanion(')
           ..write('id: $id, ')
           ..write('word: $word, ')
-          ..write('additionDate: $additionDate, ')
-          ..write('definitionIds: $definitionIds, ')
-          ..write('rowid: $rowid')
+          ..write('additionDate: $additionDate')
           ..write(')'))
         .toString();
   }
@@ -285,6 +230,14 @@ class $DefinitionsTable extends Definitions
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _wordIdMeta = const VerificationMeta('wordId');
+  @override
+  late final GeneratedColumn<int> wordId = GeneratedColumn<int>(
+      'word_id', aliasedName, true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES words (id)'));
   static const VerificationMeta _definitionMeta =
       const VerificationMeta('definition');
   @override
@@ -312,22 +265,23 @@ class $DefinitionsTable extends Definitions
       const VerificationMeta('lastRepetition');
   @override
   late final GeneratedColumn<DateTime> lastRepetition =
-      GeneratedColumn<DateTime>('last_repetition', aliasedName, false,
-          type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _examplesMeta =
-      const VerificationMeta('examples');
+      GeneratedColumn<DateTime>('last_repetition', aliasedName, true,
+          type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _exampleMeta =
+      const VerificationMeta('example');
   @override
-  late final GeneratedColumn<String> examples = GeneratedColumn<String>(
-      'examples', aliasedName, false,
+  late final GeneratedColumn<String> example = GeneratedColumn<String>(
+      'example', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
         id,
+        wordId,
         definition,
         partOfSpeech,
         repetitionLeftCount,
         lastRepetition,
-        examples
+        example
       ];
   @override
   String get aliasedName => _alias ?? 'definitions';
@@ -340,6 +294,10 @@ class $DefinitionsTable extends Definitions
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('word_id')) {
+      context.handle(_wordIdMeta,
+          wordId.isAcceptableOrUnknown(data['word_id']!, _wordIdMeta));
     }
     if (data.containsKey('definition')) {
       context.handle(
@@ -361,14 +319,12 @@ class $DefinitionsTable extends Definitions
           _lastRepetitionMeta,
           lastRepetition.isAcceptableOrUnknown(
               data['last_repetition']!, _lastRepetitionMeta));
-    } else if (isInserting) {
-      context.missing(_lastRepetitionMeta);
     }
-    if (data.containsKey('examples')) {
-      context.handle(_examplesMeta,
-          examples.isAcceptableOrUnknown(data['examples']!, _examplesMeta));
+    if (data.containsKey('example')) {
+      context.handle(_exampleMeta,
+          example.isAcceptableOrUnknown(data['example']!, _exampleMeta));
     } else if (isInserting) {
-      context.missing(_examplesMeta);
+      context.missing(_exampleMeta);
     }
     return context;
   }
@@ -381,6 +337,8 @@ class $DefinitionsTable extends Definitions
     return Definition(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      wordId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}word_id']),
       definition: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}definition'])!,
       partOfSpeech: $DefinitionsTable.$converterpartOfSpeech.fromSql(
@@ -389,9 +347,9 @@ class $DefinitionsTable extends Definitions
       repetitionLeftCount: attachedDatabase.typeMapping.read(
           DriftSqlType.int, data['${effectivePrefix}repetition_left_count'])!,
       lastRepetition: attachedDatabase.typeMapping.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}last_repetition'])!,
-      examples: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}examples'])!,
+          DriftSqlType.dateTime, data['${effectivePrefix}last_repetition']),
+      example: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}example'])!,
     );
   }
 
@@ -407,41 +365,52 @@ class $DefinitionsTable extends Definitions
 
 class Definition extends DataClass implements Insertable<Definition> {
   final int id;
+  final int? wordId;
   final String definition;
   final PartOfSpeech partOfSpeech;
   final int repetitionLeftCount;
-  final DateTime lastRepetition;
-  final String examples;
+  final DateTime? lastRepetition;
+  final String example;
   const Definition(
       {required this.id,
+      this.wordId,
       required this.definition,
       required this.partOfSpeech,
       required this.repetitionLeftCount,
-      required this.lastRepetition,
-      required this.examples});
+      this.lastRepetition,
+      required this.example});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    if (!nullToAbsent || wordId != null) {
+      map['word_id'] = Variable<int>(wordId);
+    }
     map['definition'] = Variable<String>(definition);
     {
       final converter = $DefinitionsTable.$converterpartOfSpeech;
       map['part_of_speech'] = Variable<String>(converter.toSql(partOfSpeech));
     }
     map['repetition_left_count'] = Variable<int>(repetitionLeftCount);
-    map['last_repetition'] = Variable<DateTime>(lastRepetition);
-    map['examples'] = Variable<String>(examples);
+    if (!nullToAbsent || lastRepetition != null) {
+      map['last_repetition'] = Variable<DateTime>(lastRepetition);
+    }
+    map['example'] = Variable<String>(example);
     return map;
   }
 
   DefinitionsCompanion toCompanion(bool nullToAbsent) {
     return DefinitionsCompanion(
       id: Value(id),
+      wordId:
+          wordId == null && nullToAbsent ? const Value.absent() : Value(wordId),
       definition: Value(definition),
       partOfSpeech: Value(partOfSpeech),
       repetitionLeftCount: Value(repetitionLeftCount),
-      lastRepetition: Value(lastRepetition),
-      examples: Value(examples),
+      lastRepetition: lastRepetition == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastRepetition),
+      example: Value(example),
     );
   }
 
@@ -450,13 +419,14 @@ class Definition extends DataClass implements Insertable<Definition> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Definition(
       id: serializer.fromJson<int>(json['id']),
+      wordId: serializer.fromJson<int?>(json['wordId']),
       definition: serializer.fromJson<String>(json['definition']),
       partOfSpeech: $DefinitionsTable.$converterpartOfSpeech
           .fromJson(serializer.fromJson<String>(json['partOfSpeech'])),
       repetitionLeftCount:
           serializer.fromJson<int>(json['repetitionLeftCount']),
-      lastRepetition: serializer.fromJson<DateTime>(json['lastRepetition']),
-      examples: serializer.fromJson<String>(json['examples']),
+      lastRepetition: serializer.fromJson<DateTime?>(json['lastRepetition']),
+      example: serializer.fromJson<String>(json['example']),
     );
   }
   @override
@@ -464,117 +434,129 @@ class Definition extends DataClass implements Insertable<Definition> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'wordId': serializer.toJson<int?>(wordId),
       'definition': serializer.toJson<String>(definition),
       'partOfSpeech': serializer.toJson<String>(
           $DefinitionsTable.$converterpartOfSpeech.toJson(partOfSpeech)),
       'repetitionLeftCount': serializer.toJson<int>(repetitionLeftCount),
-      'lastRepetition': serializer.toJson<DateTime>(lastRepetition),
-      'examples': serializer.toJson<String>(examples),
+      'lastRepetition': serializer.toJson<DateTime?>(lastRepetition),
+      'example': serializer.toJson<String>(example),
     };
   }
 
   Definition copyWith(
           {int? id,
+          Value<int?> wordId = const Value.absent(),
           String? definition,
           PartOfSpeech? partOfSpeech,
           int? repetitionLeftCount,
-          DateTime? lastRepetition,
-          String? examples}) =>
+          Value<DateTime?> lastRepetition = const Value.absent(),
+          String? example}) =>
       Definition(
         id: id ?? this.id,
+        wordId: wordId.present ? wordId.value : this.wordId,
         definition: definition ?? this.definition,
         partOfSpeech: partOfSpeech ?? this.partOfSpeech,
         repetitionLeftCount: repetitionLeftCount ?? this.repetitionLeftCount,
-        lastRepetition: lastRepetition ?? this.lastRepetition,
-        examples: examples ?? this.examples,
+        lastRepetition:
+            lastRepetition.present ? lastRepetition.value : this.lastRepetition,
+        example: example ?? this.example,
       );
   @override
   String toString() {
     return (StringBuffer('Definition(')
           ..write('id: $id, ')
+          ..write('wordId: $wordId, ')
           ..write('definition: $definition, ')
           ..write('partOfSpeech: $partOfSpeech, ')
           ..write('repetitionLeftCount: $repetitionLeftCount, ')
           ..write('lastRepetition: $lastRepetition, ')
-          ..write('examples: $examples')
+          ..write('example: $example')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, definition, partOfSpeech,
-      repetitionLeftCount, lastRepetition, examples);
+  int get hashCode => Object.hash(id, wordId, definition, partOfSpeech,
+      repetitionLeftCount, lastRepetition, example);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Definition &&
           other.id == this.id &&
+          other.wordId == this.wordId &&
           other.definition == this.definition &&
           other.partOfSpeech == this.partOfSpeech &&
           other.repetitionLeftCount == this.repetitionLeftCount &&
           other.lastRepetition == this.lastRepetition &&
-          other.examples == this.examples);
+          other.example == this.example);
 }
 
 class DefinitionsCompanion extends UpdateCompanion<Definition> {
   final Value<int> id;
+  final Value<int?> wordId;
   final Value<String> definition;
   final Value<PartOfSpeech> partOfSpeech;
   final Value<int> repetitionLeftCount;
-  final Value<DateTime> lastRepetition;
-  final Value<String> examples;
+  final Value<DateTime?> lastRepetition;
+  final Value<String> example;
   const DefinitionsCompanion({
     this.id = const Value.absent(),
+    this.wordId = const Value.absent(),
     this.definition = const Value.absent(),
     this.partOfSpeech = const Value.absent(),
     this.repetitionLeftCount = const Value.absent(),
     this.lastRepetition = const Value.absent(),
-    this.examples = const Value.absent(),
+    this.example = const Value.absent(),
   });
   DefinitionsCompanion.insert({
     this.id = const Value.absent(),
+    this.wordId = const Value.absent(),
     required String definition,
     required PartOfSpeech partOfSpeech,
     this.repetitionLeftCount = const Value.absent(),
-    required DateTime lastRepetition,
-    required String examples,
+    this.lastRepetition = const Value.absent(),
+    required String example,
   })  : definition = Value(definition),
         partOfSpeech = Value(partOfSpeech),
-        lastRepetition = Value(lastRepetition),
-        examples = Value(examples);
+        example = Value(example);
   static Insertable<Definition> custom({
     Expression<int>? id,
+    Expression<int>? wordId,
     Expression<String>? definition,
     Expression<String>? partOfSpeech,
     Expression<int>? repetitionLeftCount,
     Expression<DateTime>? lastRepetition,
-    Expression<String>? examples,
+    Expression<String>? example,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (wordId != null) 'word_id': wordId,
       if (definition != null) 'definition': definition,
       if (partOfSpeech != null) 'part_of_speech': partOfSpeech,
       if (repetitionLeftCount != null)
         'repetition_left_count': repetitionLeftCount,
       if (lastRepetition != null) 'last_repetition': lastRepetition,
-      if (examples != null) 'examples': examples,
+      if (example != null) 'example': example,
     });
   }
 
   DefinitionsCompanion copyWith(
       {Value<int>? id,
+      Value<int?>? wordId,
       Value<String>? definition,
       Value<PartOfSpeech>? partOfSpeech,
       Value<int>? repetitionLeftCount,
-      Value<DateTime>? lastRepetition,
-      Value<String>? examples}) {
+      Value<DateTime?>? lastRepetition,
+      Value<String>? example}) {
     return DefinitionsCompanion(
       id: id ?? this.id,
+      wordId: wordId ?? this.wordId,
       definition: definition ?? this.definition,
       partOfSpeech: partOfSpeech ?? this.partOfSpeech,
       repetitionLeftCount: repetitionLeftCount ?? this.repetitionLeftCount,
       lastRepetition: lastRepetition ?? this.lastRepetition,
-      examples: examples ?? this.examples,
+      example: example ?? this.example,
     );
   }
 
@@ -583,6 +565,9 @@ class DefinitionsCompanion extends UpdateCompanion<Definition> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (wordId.present) {
+      map['word_id'] = Variable<int>(wordId.value);
     }
     if (definition.present) {
       map['definition'] = Variable<String>(definition.value);
@@ -598,8 +583,8 @@ class DefinitionsCompanion extends UpdateCompanion<Definition> {
     if (lastRepetition.present) {
       map['last_repetition'] = Variable<DateTime>(lastRepetition.value);
     }
-    if (examples.present) {
-      map['examples'] = Variable<String>(examples.value);
+    if (example.present) {
+      map['example'] = Variable<String>(example.value);
     }
     return map;
   }
@@ -608,11 +593,12 @@ class DefinitionsCompanion extends UpdateCompanion<Definition> {
   String toString() {
     return (StringBuffer('DefinitionsCompanion(')
           ..write('id: $id, ')
+          ..write('wordId: $wordId, ')
           ..write('definition: $definition, ')
           ..write('partOfSpeech: $partOfSpeech, ')
           ..write('repetitionLeftCount: $repetitionLeftCount, ')
           ..write('lastRepetition: $lastRepetition, ')
-          ..write('examples: $examples')
+          ..write('example: $example')
           ..write(')'))
         .toString();
   }

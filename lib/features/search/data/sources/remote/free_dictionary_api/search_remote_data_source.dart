@@ -6,8 +6,8 @@ import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/features/search/data/models/word/word_model.dart';
 import 'package:reviser/features/search/data/sources/remote/i_search_remote_data_source.dart';
 
-final class SearchRemoteDataSource implements ISearchRemoteDataSource {
-  const SearchRemoteDataSource(this._client);
+final class FreeDicionaryRemoteDataSource implements ISearchRemoteDataSource {
+  const FreeDicionaryRemoteDataSource(this._client);
 
   final Dio _client;
 
@@ -67,12 +67,7 @@ final class SearchRemoteDataSource implements ISearchRemoteDataSource {
 
       logger.d("Data: $data");
       return (data.data as List).map((e) => WordModel.fromJson(e)).toList();
-    } on DioException catch (e, s) {
-      logger.e(
-        "Caught error ${e.type}",
-        error: e,
-        stackTrace: s,
-      );
+    } on DioException catch (e) {
       if (e.response?.statusCode == HttpStatus.notFound) {
         throw NotFoundWordException(word: word);
       }

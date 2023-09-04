@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:reviser/core/constant/dimension.dart';
-import 'package:reviser/core/constant/palette.dart';
-import 'package:reviser/core/constant/strings.dart';
+import 'package:reviser/core/bloc/constant/dimension.dart';
+import 'package:reviser/core/bloc/constant/palette.dart';
+import 'package:reviser/core/bloc/constant/strings.dart';
 import 'package:reviser/core/router/router.dart';
 import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/core/utils/mixins/validator_mixin.dart';

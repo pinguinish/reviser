@@ -5,6 +5,7 @@ abstract class Strings {
   static const submit = "Submit";
   static const hintDefinition = "definition";
   static const hintExample = "example";
+  static const dictionary = "dictionary";
 
   static String resultDefinitionLength(int length) => "Result: $length definitions";
 }

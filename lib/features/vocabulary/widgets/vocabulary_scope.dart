@@ -1,8 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reviser/core/utils/logger.dart';
+import 'package:reviser/core/utils/mixins/scope_mixin.dart';
 import 'package:reviser/features/initialization/models/dependencies.dart';
 import 'package:reviser/features/vocabulary/bloc/vocabulary_bloc.dart';
-import 'package:reviser/features/vocabulary/domain/interactor/vocabulary_interactor.dart';
+import 'package:reviser/features/vocabulary/bloc/vocabulary_event.dart';
+import 'package:reviser/features/vocabulary/domain/entities/vocabulary_entities.dart';
+import 'package:reviser/features/vocabulary/domain/usecase/get_all_words_use_case.dart';
 import 'package:reviser/features/vocabulary/domain/usecase/save_all_selected_definitions_use_case.dart';
 
 class VocabularyScope extends StatefulWidget {
@@ -13,11 +19,27 @@ class VocabularyScope extends StatefulWidget {
 
   final Widget child;
 
+  static _VocabularyScopeState _of(BuildContext context) =>
+      ScopeMixin.scopeOf<_InheritedVocabulary>(context).state;
+
+  static void saveWords(
+    VocabularyWordEntity data,
+    List<VocabularyDefinitionEntity> definitions,
+    BuildContext context,
+  ) =>
+      _of(context).bloc.add(VocabularyWordAdded(
+            word: data,
+            definitions: definitions,
+          ));
+
+  static void retrieveAllWords(BuildContext context) =>
+      _of(context).bloc.add(VocabularyWordsRetrieved());
+
   @override
-  State<VocabularyScope> createState() => _VocabularyScopState();
+  State<VocabularyScope> createState() => _VocabularyScopeState();
 }
 
-class _VocabularyScopState extends State<VocabularyScope> {
+class _VocabularyScopeState extends State<VocabularyScope> {
   late final VocabularyBloc bloc;
 
   @override
@@ -28,9 +50,8 @@ class _VocabularyScopState extends State<VocabularyScope> {
     final definition = Dependencies.of(context).vocabularyDefinitionRepository;
 
     bloc = VocabularyBloc(
-      interactor: VocabularyInteractor(
-        saveWordUseCase: SaveWordUseCase(word, definition),
-      ),
+      saveWordUseCase: SaveWordUseCase(word, definition),
+      getAllWordsUseCase: GetAllWordsUseCase(word, definition),
     );
   }
 
@@ -43,15 +64,22 @@ class _VocabularyScopState extends State<VocabularyScope> {
   @override
   Widget build(BuildContext context) => BlocProvider.value(
         value: bloc,
-        child: _InheritedVocabulary(child: widget.child),
+        child: _InheritedVocabulary(
+          state: this,
+          child: widget.child,
+        ),
       );
 }
 
 class _InheritedVocabulary extends InheritedWidget {
+  final _VocabularyScopeState state;
+
   const _InheritedVocabulary({
     required super.child,
+    required this.state,
   });
 
   @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) => false;
+  bool updateShouldNotify(_InheritedVocabulary oldWidget) =>
+      state != oldWidget.state;
 }

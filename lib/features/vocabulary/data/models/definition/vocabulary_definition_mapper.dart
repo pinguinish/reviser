@@ -4,6 +4,7 @@ import 'package:reviser/features/vocabulary/domain/entities/vocabulary_entities.
 extension VocabularyModelDefinitionMapper on VocabularyDefinitionModel {
   VocabularyDefinitionEntity toEntity() => VocabularyDefinitionEntity(
         id: id,
+        wordId: wordId,
         definition: definition,
         partOfSpeech: partOfSpeech,
         lastRepetition: lastRepetition,
@@ -15,6 +16,7 @@ extension VocabularyModelDefinitionMapper on VocabularyDefinitionModel {
 extension VocabularyEntityDefinitionMapper on VocabularyDefinitionEntity {
   VocabularyDefinitionModel toModel() => VocabularyDefinitionModel(
         id: id,
+        wordId: wordId,
         definition: definition,
         partOfSpeech: partOfSpeech,
         lastRepetition: lastRepetition,

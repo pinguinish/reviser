@@ -44,6 +44,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    VocabularyLookupRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const VocabularyLookup(),
+      );
+    },
   };
 }
 
@@ -140,4 +146,18 @@ class VocabularyItemEditorRouteArgs {
   String toString() {
     return 'VocabularyItemEditorRouteArgs{key: $key, definition: $definition}';
   }
+}
+
+/// generated route for
+/// [VocabularyLookup]
+class VocabularyLookupRoute extends PageRouteInfo<void> {
+  const VocabularyLookupRoute({List<PageRouteInfo>? children})
+      : super(
+          VocabularyLookupRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'VocabularyLookupRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }

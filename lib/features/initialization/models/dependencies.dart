@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:reviser/core/router/router.dart';
 import 'package:reviser/features/initialization/widgets/dependencies_scope.dart';
 import 'package:reviser/features/search/data/repository/search_repository.dart';
+import 'package:reviser/features/search/data/sources/remote/free_dictionary_api/search_remote_data_source.dart';
 import 'package:reviser/features/search/data/sources/remote/i_search_remote_data_source.dart';
-import 'package:reviser/features/search/data/sources/remote/search_remote_data_source.dart';
 import 'package:reviser/features/search/domain/repository/i_search_repository.dart';
 import 'package:reviser/features/vocabulary/data/repository/vocabulary_definition_repository_impl.dart';
 import 'package:reviser/features/vocabulary/data/repository/vocabulary_word_repository_impl.dart';
 import 'package:reviser/features/vocabulary/data/sources/local/i_vocabulary_definition_local_data_source.dart';
 import 'package:reviser/features/vocabulary/data/sources/local/i_vocabulary_word_local_data_source.dart';
-import 'package:reviser/features/vocabulary/data/sources/local/sqlite/definition/vocabulary_sqlite_definition_local_data_source_impl.dart';
-import 'package:reviser/features/vocabulary/data/sources/local/sqlite/word/sqlite_word_local_data_source_impl.dart';
+import 'package:reviser/features/vocabulary/data/sources/local/sqlite/vocabulary_definition_local_data_source_impl.dart';
+import 'package:reviser/features/vocabulary/data/sources/local/sqlite/vocabulary_word_local_data_source.dart';
 import 'package:reviser/features/vocabulary/domain/repository/i_vocabulary_definition_repository.dart';
 import 'package:reviser/features/vocabulary/domain/repository/i_vocabulary_word_repository.dart';
 import 'package:reviser/features/vocabulary/infrastructure/database/sqlite/vocabulary_sqlite_database.dart';
@@ -52,7 +52,7 @@ final class MutableDependencies extends Dependencies {
 
   @override
   late final ISearchRemoteDataSource searchRemoteDataSource =
-      SearchRemoteDataSource(httpClient);
+      FreeDicionaryRemoteDataSource(httpClient);
 
   @override
   late final ISearchRepository searchRepository =
@@ -68,7 +68,7 @@ final class MutableDependencies extends Dependencies {
   @override
   late final IVocabularyDefinitionLocalDataSource
       vocabularyDefinitionLocalDataSource =
-      VocabularySQLiteDefinitionLocalDataSourceImpl(vocabularySQLiteDatabase);
+      VocabularyDefinitionLocalDataSourceImpl(vocabularySQLiteDatabase);
 
   @override
   late final IVocabularyDefinitionRepository vocabularyDefinitionRepository =
@@ -77,10 +77,7 @@ final class MutableDependencies extends Dependencies {
 
   @override
   late final IVocabularyWordLocalDataSource vocabularyWordLocalDataSource =
-      VocabularySQLiteWordLocalDataSourceImpl(
-    vocabularySQLiteDatabase,
-    getterDefinitions: vocabularyDefinitionLocalDataSource,
-  );
+      VocabularyWordLocalDataSourceImpl(vocabularySQLiteDatabase);
 
   @override
   late final IVocabularyWordRepository vocabularyWordRepository =

@@ -7,14 +7,13 @@ extension VocabularyWordEntityMapper on VocabularyWordEntity {
         id: id,
         word: word,
         additionDate: additionDate,
-        definitions: definitions.map((d) => d.toModel()).toList(),
       );
 }
 
 extension VocabularyWordModelMapper on VocabularyWordModel {
   VocabularyWordEntity toEntity() => VocabularyWordEntity(
+        id: id,
         word: word,
-        definitions: definitions.map((d) => d.toEntity()).toList(),
         additionDate: additionDate,
       );
 }

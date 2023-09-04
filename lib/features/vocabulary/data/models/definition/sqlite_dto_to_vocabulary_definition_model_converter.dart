@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart';
 import 'package:reviser/features/common/core/utils/database.dart';
 import 'package:reviser/features/vocabulary/data/models/definition/vocabulary_definition_model.dart';
 import 'package:reviser/features/vocabulary/infrastructure/database/sqlite/vocabulary_sqlite_database.dart';
@@ -6,21 +5,24 @@ import 'package:reviser/features/vocabulary/infrastructure/database/sqlite/vocab
 extension SQLiteDTOToVocabularyDefinitionModelConverter on Definition {
   VocabularyDefinitionModel toModel() => VocabularyDefinitionModel(
         id: id,
+        wordId: wordId,
         definition: definition,
         partOfSpeech: partOfSpeech,
         lastRepetition: lastRepetition,
         repetitionLeftCount: repetitionLeftCount,
-        example: examples,
+        example: example,
       );
 }
 
 extension SQLiteWordModelToDTOVocabularyConverter on VocabularyDefinitionModel {
-  DefinitionsCompanion toSQLiteDTO() => DefinitionsCompanion(
-        id: getValueOrAbsent(id),
-        definition: Value(definition),
-        partOfSpeech: Value(partOfSpeech),
-        repetitionLeftCount: getValueOrAbsent(repetitionLeftCount),
-        lastRepetition: getValueOrAbsent(lastRepetition),
-        examples: Value(example),
-      );
+  DefinitionsCompanion toSQLiteDTO({bool insert = true}) {
+    return DefinitionsCompanion.insert(
+      wordId: getValueOrAbsent(wordId),
+      definition: definition,
+      partOfSpeech: partOfSpeech,
+      lastRepetition: getValueOrAbsent(lastRepetition),
+      example: example,
+    );
+  }
 }
+

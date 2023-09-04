@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:reviser/core/constant/palette.dart';
+import 'package:reviser/core/bloc/constant/palette.dart';
 
-abstract class SnackBarManager {
+mixin SnackBarManager {
   static void info({
     required BuildContext context,
     required String info,

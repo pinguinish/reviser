@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 // All entities are here 'cause
 // Right now it doens't requires decoupling at all
 
@@ -6,35 +8,45 @@ import 'package:reviser/features/common/core/part_of_speech.dart';
 
 class VocabularyWordEntity extends Equatable {
   const VocabularyWordEntity({
-    this.id,
     required this.word,
-    required this.definitions,
+    this.id,
     this.additionDate,
   });
 
   final int? id;
   final String word;
   final DateTime? additionDate;
-  final List<VocabularyDefinitionEntity> definitions;
+
+  VocabularyWordEntity copyWith({
+    int? id,
+    String? word,
+    DateTime? additionDate,
+    List<VocabularyDefinitionEntity>? definitions,
+  }) {
+    return VocabularyWordEntity(
+      id: id ?? this.id,
+      word: word ?? this.word,
+      additionDate: additionDate ?? this.additionDate,
+    );
+  }
 
   @override
-  List<Object> get props => [
-        word,
-        definitions,
-      ];
+  List<Object> get props => [word];
 }
 
 class VocabularyDefinitionEntity extends Equatable {
   const VocabularyDefinitionEntity({
-    this.id,
+    this.wordId,
     required this.definition,
     required this.partOfSpeech,
+    required this.example,
+    this.id,
     this.lastRepetition,
     this.repetitionLeftCount,
-    this.example = "",
   });
 
   final int? id;
+  final int? wordId;
   final String definition;
   final PartOfSpeech partOfSpeech;
   final DateTime? lastRepetition;
@@ -47,4 +59,23 @@ class VocabularyDefinitionEntity extends Equatable {
         partOfSpeech,
         example,
       ];
+  VocabularyDefinitionEntity copyWith({
+    int? id,
+    int? wordId,
+    String? definition,
+    PartOfSpeech? partOfSpeech,
+    DateTime? lastRepetition,
+    int? repetitionLeftCount,
+    String? example,
+  }) {
+    return VocabularyDefinitionEntity(
+      id: id ?? this.id,
+      wordId: wordId ?? this.wordId,
+      definition: definition ?? this.definition,
+      partOfSpeech: partOfSpeech ?? this.partOfSpeech,
+      lastRepetition: lastRepetition ?? this.lastRepetition,
+      repetitionLeftCount: repetitionLeftCount ?? this.repetitionLeftCount,
+      example: example ?? this.example,
+    );
+  }
 }

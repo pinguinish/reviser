@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reviser/core/constant/dimension.dart';
-import 'package:reviser/core/constant/palette.dart';
+import 'package:reviser/core/bloc/constant/dimension.dart';
+import 'package:reviser/core/bloc/constant/palette.dart';
 import 'package:reviser/core/widgets/gaps.dart';
 
 import 'definition_list.dart';

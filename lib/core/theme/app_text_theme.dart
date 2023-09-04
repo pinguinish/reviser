@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reviser/core/constant/palette.dart';
+import 'package:reviser/core/bloc/constant/palette.dart';
 
 class AppTextTheme extends TextTheme {
 

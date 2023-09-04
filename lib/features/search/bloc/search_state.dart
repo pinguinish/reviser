@@ -27,16 +27,6 @@ class SearchError extends SearchState {
   const SearchError({
     this.isNotFound = false,
   });
-
-  // factory SearchError.network({
-  //   bool noInternetConnection = false,
-  //   bool badConnection = false,
-  // }) {
-  //   return SearchNetworkError(
-  //     noInternetConnection: noInternetConnection,
-  //     badConnection: badConnection,
-  //   );
-  // }
 }
 
 final class SearchNetworkError extends SearchError {

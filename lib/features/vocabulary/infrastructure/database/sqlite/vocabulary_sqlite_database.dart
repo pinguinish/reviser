@@ -17,7 +17,7 @@ class VocabularySQLiteDatabase extends _$VocabularySQLiteDatabase {
   int get schemaVersion => 1;
 }
 
-LazyDatabase _openConnection({String filename = "vocabulary.sqlite"}) {
+LazyDatabase _openConnection({String filename = "x.sqlite"}) {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, filename));

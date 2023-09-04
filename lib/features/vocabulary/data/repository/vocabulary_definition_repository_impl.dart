@@ -13,19 +13,37 @@ class VocabularyDefinitionRepositoryImpl
 
   @override
   Future<void> delete(int id) async {
-    _local.deleteDefinitionById(id);
+    try {
+      _local.deleteDefinitionById(id);
+    } on Object {
+      rethrow;
+    }
   }
 
   @override
   Future<List<VocabularyDefinitionEntity>> getAllDefinitionsByWordId(
     int id,
   ) async {
-    final definitions = await _local.getAllDefinitionsByWordId(id);
-    return definitions.map((d) => d.toEntity()).toList();
+    try {
+      final definitions = await _local.getAllDefinitionsByWordId(id);
+      return definitions.map((d) => d.toEntity()).toList();
+    } on Object {
+      rethrow;
+    }
   }
 
   @override
-  Future<void> upsert(VocabularyDefinitionEntity definition) async {
-    _local.upsertDefinition(definition.toModel());
+  Future<VocabularyDefinitionEntity> upsert(VocabularyDefinitionEntity definition) async {
+    try {
+      final definitionModel = await _local.upsertDefinition(definition.toModel());
+      return definitionModel.toEntity();
+    } on Object {
+      rethrow;
+    }
+  }
+  
+  @override
+  Future<void> deleteAllDefinitionsByWordId(int id) {
+    throw UnimplementedError();
   }
 }

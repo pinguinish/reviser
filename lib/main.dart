@@ -6,6 +6,7 @@ import 'package:reviser/features/initialization/initialization.dart';
 import 'package:reviser/features/initialization/widgets/app_error.dart';
 import 'package:reviser/features/initialization/widgets/dependencies_scope.dart';
 import 'package:reviser/features/search/widgets/search_scope.dart';
+import 'package:reviser/features/vocabulary/widgets/vocabulary_scope.dart';
 
 import 'features/app/widgets/reviser_app.dart';
 
@@ -15,7 +16,11 @@ void main() => runZonedGuarded(
           onSuccess: (dependencies) => runApp(
             DependenciesScope(
               dependencies: dependencies,
-              child: const SearchScope(child: ReviserApp()),
+              child: const VocabularyScope(
+                child: SearchScope(
+                  child: ReviserApp(),
+                ),
+              ),
             ),
           ),
           onError: (e, s) {

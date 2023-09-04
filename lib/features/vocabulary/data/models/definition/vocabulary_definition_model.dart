@@ -4,6 +4,7 @@ import 'package:reviser/features/common/core/part_of_speech.dart';
 class VocabularyDefinitionModel extends Equatable {
   const VocabularyDefinitionModel({
     this.id,
+    this.wordId,
     required this.definition,
     required this.partOfSpeech,
     this.lastRepetition,
@@ -12,6 +13,7 @@ class VocabularyDefinitionModel extends Equatable {
   });
 
   final int? id;
+  final int? wordId;
   final String definition;
   final PartOfSpeech partOfSpeech;
   final DateTime? lastRepetition;

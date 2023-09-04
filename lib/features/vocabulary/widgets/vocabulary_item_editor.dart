@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:reviser/core/constant/dimension.dart';
-import 'package:reviser/core/constant/palette.dart';
-import 'package:reviser/core/constant/strings.dart';
+import 'package:reviser/core/bloc/constant/dimension.dart';
+import 'package:reviser/core/bloc/constant/palette.dart';
+import 'package:reviser/core/bloc/constant/strings.dart';
 import 'package:reviser/core/utils/mixins/validator_mixin.dart';
 import 'package:reviser/core/widgets/gaps.dart';
 import 'package:reviser/core/widgets/snack_bar_manager.dart';
@@ -10,7 +10,7 @@ import 'package:reviser/core/widgets/tag.dart';
 import 'package:reviser/features/common/domain/entities/word_entity.dart';
 import 'package:reviser/features/search/widgets/search_scope.dart';
 import '../../../core/widgets/default_text_button.dart';
-import '_temp_/definition_list.dart';
+import 'definition_list.dart';
 
 // [TODO]: Make this widget be able to work with adding new words
 @RoutePage(name: "VocabularyItemEditorRoute")

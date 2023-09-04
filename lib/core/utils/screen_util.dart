@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 abstract class ScreenDimension {
@@ -21,8 +19,8 @@ Widget callDeviceBuilderCheckingNull(
     builder == null ? const SizedBox.shrink() : builder(context);
 
 extension ScreenUtilExtension on BuildContext {
-
-  DeviceType get deviceType => ScreenUtil.deviceTypeOf(MediaQuery.of(this).size);
+  DeviceType get deviceType =>
+      ScreenUtil.deviceTypeOf(MediaQuery.of(this).size);
 
   Widget adaptByDeviceType({
     WidgetBuilder? large,
@@ -40,18 +38,14 @@ extension ScreenUtilExtension on BuildContext {
     VoidCallback? large,
     VoidCallback? medium,
     VoidCallback? small,
-  }) => switch (ScreenUtil.deviceTypeOf(MediaQuery.of(this).size)) {
-      LargeDeviceType _ => large == null ? () {} : large(),
-      MediumDeviceType _ => medium == null ? () {} : medium(),
-      SmallDeviceType _ => small == null ? () {} : small(),
+  }) =>
+      switch (ScreenUtil.deviceTypeOf(MediaQuery.of(this).size)) {
+        LargeDeviceType _ => large == null ? () {} : large(),
+        MediumDeviceType _ => medium == null ? () {} : medium(),
+        SmallDeviceType _ => small == null ? () {} : small(),
+      };
 
-    };
-
-
-
-  void x() {
-    
-  }
+  void x() {}
 }
 
 class DeviceTypeException implements Exception {
@@ -116,7 +110,8 @@ final class MediumDeviceType extends DeviceType {
 final class SmallDeviceType extends DeviceType {
   const SmallDeviceType()
       : super(
-            representation: "Small",
-            size: ScreenDimension.small,
-            textScaleFactor: DeviceTextScaleFactor.small);
+          representation: "Small",
+          size: ScreenDimension.small,
+          textScaleFactor: DeviceTextScaleFactor.small,
+        );
 }

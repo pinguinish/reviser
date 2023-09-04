@@ -1,3 +1,4 @@
+import 'package:reviser/core/utils/logger.dart';
 import 'package:reviser/features/vocabulary/data/models/word/vocabulary_word_mapper.dart';
 import 'package:reviser/features/vocabulary/data/sources/local/i_vocabulary_word_local_data_source.dart';
 import 'package:reviser/features/vocabulary/domain/entities/vocabulary_entities.dart';
@@ -12,20 +13,33 @@ final class VocabularyWordRepositoryImpl implements IVocabularyWordRepository {
 
   @override
   Future<void> delete(int id) async {
-    _local.deleteWordById(id);
+    try {
+      _local.deleteWordById(id);
+    } on Object {
+      rethrow;
+    }
   }
 
   @override
   Future<List<VocabularyWordEntity>> getAllWords() async {
-    final models = await _local.getAllWords();
-    return models.map((e) => e.toEntity()).toList();
+    try {
+      final models = await _local.getAllWords();
+      return models.map((m) => m.toEntity()).toList();
+    } on Object {
+      rethrow;
+    }
   }
 
   @override
-  Future<void> insert(VocabularyWordEntity word) async {
-    final model = word.toModel();
-    _local.insertWord(model.copyWith(
-      additionDate: DateTime.now(),
-    ));
+  Future<VocabularyWordEntity> insert(VocabularyWordEntity word) async {
+    try {
+      final model = word.toModel();
+      final dto = await _local.insertWord(model.copyWith(
+        additionDate: DateTime.now(),
+      ));
+      return dto.toEntity();
+    } on Object {
+      rethrow;
+    }
   }
 }

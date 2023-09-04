@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reviser/core/constant/palette.dart';
-import '../../core/constant/dimension.dart';
+import 'package:reviser/core/bloc/constant/palette.dart';
+import '../bloc/constant/dimension.dart';
 
 class DefaultTextButton extends StatelessWidget {
   const DefaultTextButton({
