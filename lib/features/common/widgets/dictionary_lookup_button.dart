@@ -21,8 +21,8 @@ class DictionaryLookupButton extends StatelessWidget {
         ),
       ),
       medium: (context) => SizedBox(
-        width: 10,
-        height: 10,
+        width: 80,
+        height: 80,
         child: FloatingActionButton(
           backgroundColor: Palette.indigo,
           shape: const CircleBorder(),

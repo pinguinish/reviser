@@ -21,7 +21,7 @@ class DefaultTextButton extends StatelessWidget {
           padding: EdgeInsets.symmetric(
             horizontal: horizontal,
             // [WARNING]: Don't do this. (I'm just a bit lazy)
-            vertical: context.deviceType is MediumDeviceType ? vertical : vertical + 10,
+            vertical: context.deviceType is MediumDeviceType ? vertical : vertical + 30,
           ),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
