@@ -100,11 +100,12 @@ class _LargeHomeView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // [TODO]: put strings to Strings.dart
             Text(
               "Large devices are unsupported",
               style: Theme.of(context).textTheme.displayMedium,
             ),
-            const Text("Please consider to use mobile"),
+            const Text("Please consider to use a phone"),
           ],
         ),
       ),
